@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { chamadaAPI } from "../../backend/chamadaPadrao";
 import { useState } from 'react';
 import Link from "next/link";
+import "../globals.css";
 
 export default function login() {
   const [formData, setFormData] = useState({
@@ -41,8 +42,8 @@ export default function login() {
     <div className="flex flex-row">
       <div className="w-1/3 flex-auto"></div>
       <div className="w-1/3 flex-auto">
-        <div className="text-4xl mt-8 grow text-center">Login</div>
-        <div id="form" className="p-8 mt-8 bg-gray-200 rounded-xl grow">
+        <div className="titulo">Login</div>
+        <div id="form" className="formulario">
           <form action={formAction}>
             <div id="inputText" className="flex flex-col">
               <label htmlFor="cpf">CPF</label>
@@ -54,7 +55,7 @@ export default function login() {
                 onChange={handleChange}
                 maxLength={11} // Mudar caso colocar mascara
                 placeholder="111.111.111-11"
-                className="border p-2 rounded-sm"
+                className="campoTexto"
               />
             </div>
 
@@ -68,18 +69,19 @@ export default function login() {
                 onChange={handleChange}
                 minLength={8}
                 placeholder="123..."
-                className="border p-2 rounded-sm"/>
+                className="campoTexto"/>
             </div>
 
-            <div className="mt-5 text-center">
+            <div className="mt-7 mb-5 text-center">
               <button 
                 type="submit"
-                className="p-3 bg-blue-600 text-gray-100 font-semibold rounded-md cursor-pointer"
+                className="botao-primario"
               >
                 Realizar Login
               </button>
             </div>
           </form>
+          <hr className="text-gray-400"/>
 
           <div className="mt-5 text-center">
             <Link 

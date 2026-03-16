@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { chamadaAPI } from "../../backend/chamadaPadrao";
 import { useState } from 'react';
+import "../globals.css";
 
 export default function cadastro() {
   const [formData, setFormData] = useState({
@@ -42,8 +43,8 @@ export default function cadastro() {
     <div className="flex flex-row">
       <div className="w-1/3 flex-auto"></div>
       <div className="w-1/3 flex-auto">
-        <div className="text-4xl mt-8 grow text-center">Cadastro</div>
-        <div id="form" className="p-8 mt-8 bg-gray-200 rounded-xl grow">
+        <div className="titulo">Cadastro</div>
+        <div id="form" className="formulario">
           <form action={formAction}>
             <div id="inputText" className="flex flex-col">
               <label htmlFor="nome">Nome</label>
@@ -54,7 +55,8 @@ export default function cadastro() {
                 value={formData.nome} 
                 onChange={handleChange}
                 placeholder="Fulano de tal"
-                className="border p-2 rounded-sm"
+                className="campoTexto"
+                required
               />
             </div>
 
@@ -68,7 +70,8 @@ export default function cadastro() {
                 onChange={handleChange}
                 maxLength={11} // Mudar caso colocar mascara
                 placeholder="111.111.111-11"
-                className="border p-2 rounded-sm"
+                className="campoTexto"
+                required
               />
             </div>
 
@@ -81,7 +84,8 @@ export default function cadastro() {
                 value={formData.email} 
                 onChange={handleChange}
                 placeholder="fulano@gmail.com"
-                className="border p-2 rounded-sm"
+                className="campoTexto"
+                required
               />
             </div>
 
@@ -95,13 +99,15 @@ export default function cadastro() {
                 onChange={handleChange}
                 minLength={8}
                 placeholder="123..."
-                className="border p-2 rounded-sm"/>
+                className="campoTexto"
+                required
+              />
             </div>
 
             <div className="mt-5 text-center">
               <button 
                 type="submit"
-                className="p-3 bg-blue-600 text-gray-100 font-semibold rounded-md cursor-pointer"
+                className="botao-primario"
               >
                 Cadastrar-se
               </button>

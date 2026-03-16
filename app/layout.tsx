@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "OxentePass",
-  description: "Login screen",
+  description: "Homepage",
 };
 
 export default function RootLayout({
@@ -29,7 +29,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <header>
-          <div id="navbar" className="flex flex-row p-4 gap-6">
+          <div className="navbar">
             <Link 
               href="/"
               className="text-xl mr-4 cursor-pointer"

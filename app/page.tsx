@@ -1,9 +1,11 @@
 
 import { chamadaAPI } from "../backend/chamadaPadrao";
+import Link from 'next/link';
+import "./globals.css";
 
 async function getEventos () {
   const response = await chamadaAPI(
-    "/evento",
+    "/evento?size=3",
     "GET"
   )
 
@@ -21,12 +23,19 @@ export default async function home() {
   return (
     <div>
       <main>
-        <div className="text-4xl mt-8 grow text-center">Eventos</div>
-        <ul className="mt-5 grow text-center">
+        <div className="titulo">Eventos</div>
+        <div className="flex flex-row mt-5 gap-4 justify-center">
           {eventos.map((item: any) => (
-            <li key={item.id}>{item.nome}</li>
+            <Link 
+              href={`/evento/${item.id}`}
+              className="cursor-pointer"
+            >
+              <div className="evento-card">
+                {item.nome}
+              </div>
+            </Link>
           ))}
-        </ul>
+        </div>
       </main>
     </div>
   );
