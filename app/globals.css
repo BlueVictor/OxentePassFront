@@ -3,23 +3,16 @@
 :root {
   --azul-pernambuco: rgb(0, 87, 168);
   --amarelo-sol: rgb(255, 199, 44);
-  --verde-tropical: rgb(0, 140, 69);
-  --vermelho-frevo: rgb(227, 28, 35);
+  --verde-tropical: rgb(12, 136, 74);
+  --vermelho-frevo: rgb(223, 70, 49);
   --branco-fundo: rgb(247, 244, 239);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-roboto);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #ededed;
-    --foreground: #0a0a0a;
-  }
 }
 
 body {
@@ -56,6 +49,13 @@ body {
 }
 
 .cidade-card {
-  @apply p-3 bg-gray-300 w-lg rounded-xl;
+  background-color: var(--amarelo-sol);
+  @apply p-3 w-80 rounded-xl text-gray-800 text-center;
+}
+
+.tag-card {
+  background-color: var(--vermelho-frevo);
+  color: var(--branco-fundo);
+  @apply p-2 rounded-md font-semibold;
 }
 
