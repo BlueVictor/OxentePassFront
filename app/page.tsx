@@ -8,7 +8,7 @@ const pagina = 0
 
 async function getEventos () {
   const response = await chamadaAPI(
-    `/evento?page=${pagina}&size=3`,
+    `/evento/comImg?page=${pagina}&size=3`,
     "GET"
   )
 
@@ -20,57 +20,19 @@ async function getEventos () {
   return response.content
 }
 
-async function getImagemEvento (idEvento: string) {
-  const response = await chamadaAPI(
-    `/evento/${idEvento}/imagens`,
-    "GET"
-  )
-
-  if (!response) {
-    console.error("Falha no carregamento de imagens")
-    return
-  }
-
-  if (response.empty == true){
-    return {
-      chaveS3: "/next.svg", 
-      nome: "imagem placeholder" 
-    }
-  }
-  else {
-    return response.content[0]
-  }
-}
-
 function getURL(dado: string) {
-  if (dado.charAt(0) == '/') {
-    return dado
-  }
-  else {
-    return `${process.env.NEXT_PUBLIC_AWS_BASE_LINK}${dado}`
-  }
+  return `${process.env.NEXT_PUBLIC_AWS_BASE_LINK}${dado}`
 }
 
 export default async function home() {
   const eventos = await getEventos()
-
-  const eventosComImagem = await Promise.all(
-    eventos.map(async (evento: any) => {
-      const imagens = await getImagemEvento(evento.id)
-
-      return {
-        ...evento,
-        imagem: imagens
-      }
-    })
-  )
 
   return (
     <div>
       <main>
         <div className="titulo">Eventos</div>
         <div className="flex flex-row flex-wrap mt-5 gap-4 justify-center">
-          {eventosComImagem.map((item: any) => (
+          {eventos.map((item: any) => (
             <Link
               key={item.id} 
               href={`/evento/${item.id}`}
@@ -78,10 +40,11 @@ export default async function home() {
             >
               <div className="evento-card">
                 <Image
-                  src={getURL(item.imagem.chaveS3)}
-                  alt={item.imagem.nome}
-                  width={200}
-                  height={100}
+                  src={item.imagem ? getURL(item.imagem.chaveS3) : "/placeholder.png"}
+                  alt={item.imagem?.nome || "placeholder"}
+                  width={300}
+                  height={250}
+                  className="object-cover rounded"
                 />
                 <h2 className="text-lg">{item.nome}</h2>
               </div>
