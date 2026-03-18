@@ -31,7 +31,9 @@ export default function RootLayout({
         <header>
           <Navbar />
         </header>
-        {children}
+        <main className="main-container">
+          {children}
+        </main>
       </body>
     </html>
   );

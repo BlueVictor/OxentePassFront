@@ -64,3 +64,7 @@ body {
   background: linear-gradient(90deg,rgba(227, 227, 227, 1) 0%, rgba(245, 245, 245, 1) 92%);
  @apply p-3 w-80 rounded-xl text-gray-800 text-center; 
 }
+
+.main-container{
+  @apply min-h-screen bg-slate-50 px-4 py-8 sm:px-6 lg:px-8
+}
