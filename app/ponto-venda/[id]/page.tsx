@@ -2,7 +2,7 @@ import { chamadaAPI } from "../../../backend/chamadaPadrao";
 import HeaderCard from "../../_components/HeaderCard"
 import DetailsCard from "../../_components/DetailsCard";
 
-async function getPontoVendas(id: string) {
+async function getPontoVendaById(id: string) {
     const response = await chamadaAPI(
         `/pontovenda/filtro?id=${id}`,
         "GET"
@@ -17,7 +17,7 @@ async function getPontoVendas(id: string) {
 export default async function PontoVendaPage({ params, }: { params: Promise<{ id: string }> }) {
 
     const { id } = await params;
-    const p = await getPontoVendas(id);
+    const p = await getPontoVendaById(id);
 
     return (
         <main className="mx-auto flex w-full max-w-4xl flex-col gap-6">
