@@ -5,14 +5,17 @@
 }
 
 .evento-conteudo-card {
-  @apply p-3 mt-5 w-80 text-amber-50 rounded-xl text-center text-shadow-sm;
+  @apply p-3 mt-5 w-80 bg-white rounded-xl border border-slate-100 text-center shadow-sm;
 }
 
 .evento-ingressos {
-  background-color: rgb(247, 244, 239);
-  @apply absolute p-4 flex flex-col w-80 border-l gap-3 top-0 left-full h-full z-50;
+  @apply absolute p-4 flex flex-col w-80 border border-slate-200 rounded-2xl gap-3 bg-white top-0 right-0 h-full z-50;
 }
 
 .ingresso-card {
   @apply p-4 w-70 justify-center bg-indigo-100 rounded-xl text-shadow-xs;
+}
+
+.tag-card {
+  @apply px-3 py-2 bg-blue-600 text-amber-50 rounded-full shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-md;
 }
