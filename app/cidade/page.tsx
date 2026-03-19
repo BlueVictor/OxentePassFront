@@ -1,10 +1,9 @@
 
 import { chamadaAPI } from "../../backend/chamadaPadrao";
-import Link from 'next/link';
 import "../globals.css";
 import "./page.css";
 import HeaderCard from "../_components/HeaderCard";
-import { Tags } from "../_components/CidadeTagCard";
+import { CidadeCard } from "../_components/CidadeCard";
 
 const pagina = 0
 
@@ -38,20 +37,7 @@ export default async function cidades () {
 
         <div className="flex flex-row flex-wrap mt-5 gap-4 justify-center">
           {cidades.map((item: any) => (
-            <Link
-              key={item.id} 
-              href={`/cidade/${item.id}`}
-              className="cursor-pointer"
-            >
-              <div className="cidade-card">
-                <h2 className="text-2xl">{item.nome}</h2>
-                <p className="mt-2">{item.descricao}</p>
-
-                {(item.tags.length == 0) ? undefined : <hr className="my-3"/>}
-                
-                <Tags tags={item.tags} />
-              </div>
-            </Link>
+            <CidadeCard key={item.id} item={item} />
           ))}
         </div>
       </main>
