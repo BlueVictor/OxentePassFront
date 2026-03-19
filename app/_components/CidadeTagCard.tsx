@@ -3,12 +3,12 @@
 import { useRouter } from 'next/navigation';
 import "../cidade/page.css"
 
-export function Tags({ tags }: any) {
+export function CidadeTagCard({ tags }: any) {
   const router = useRouter()
 
   const handleTagClick = (e: any, tag: any) => {
     e.stopPropagation()
-    router.push(`/categoria/${tag.id}`)
+    router.push(`/categoria/${tag.tag}`)
   };
 
   return (
