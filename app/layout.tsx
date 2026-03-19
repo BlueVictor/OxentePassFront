@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { AuthProvider } from "./_components/AuthProvider";
+import { ToastProvider } from "./_components/ToastProvider";
 import Navbar from "./_components/Navbar";
 import "./globals.css";
 
@@ -35,12 +36,14 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider>
-          <header>
-            <Navbar />
-          </header>
-          <main className="main-container">
-            {children}
-          </main>
+          <ToastProvider>
+            <header>
+              <Navbar />
+            </header>
+            <main className="main-container">
+              {children}
+            </main>
+          </ToastProvider>
         </AuthProvider>
       </body>
     </html>

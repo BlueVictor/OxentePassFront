@@ -7,15 +7,16 @@ import Link from "next/link";
 import "../globals.css";
 import Form from "../_components/Form";
 import { useAuth } from "../_components/AuthProvider";
+import { useToast } from "../_components/ToastProvider";
 
 export default function LoginPage() {
   const router = useRouter();
   const { atualizarUsuario } = useAuth();
+  const { showToast } = useToast();
   const [formData, setFormData] = useState({
     cpf: "",
     senha: ""
   });
-  const [erroLogin, setErroLogin] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -27,8 +28,6 @@ export default function LoginPage() {
   };
 
   const formAction = async () => {
-    setErroLogin("");
-
     const response = await chamadaAPI(
       "/usuario/login", 
       "POST", 
@@ -36,12 +35,10 @@ export default function LoginPage() {
     )
 
     if (!response) {
-      setErroLogin("Não foi possível realizar o login com os dados informados.");
+      showToast("Não foi possível realizar o login com os dados informados.", "error");
       return
     }
 
-    // Vale a pena fazer um "retorno dinamico" aqui
-    // (redirecionar para a pagina que o usuario estava antes)
     await atualizarUsuario();
     router.push("/");
     router.refresh();
@@ -66,7 +63,7 @@ export default function LoginPage() {
             href="/cadastro"
             className="text-blue-600 transition hover:text-blue-800"
           >
-            Não tem uma conta? Realize seu cadastro agora!
+            Nao tem uma conta? Realize seu cadastro agora!
           </Link>
         }
       >
@@ -79,7 +76,7 @@ export default function LoginPage() {
             value={formData.cpf}
             onChange={handleChange}
             maxLength={11}
-            placeholder="Digite aqui seu cpf (apenas dígitos)"
+            placeholder="Digite aqui seu cpf (apenas digitos)"
             className="campoTexto"
           />
         </div>
@@ -97,12 +94,6 @@ export default function LoginPage() {
             className="campoTexto"
           />
         </div>
-
-        {erroLogin ? (
-          <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-            {erroLogin}
-          </p>
-        ) : null}
       </Form>
     </div>
   );
