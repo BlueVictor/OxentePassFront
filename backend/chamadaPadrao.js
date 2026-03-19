@@ -60,6 +60,10 @@ export async function buscarUsuarioAutenticado() {
     return await chamadaAPI("/auth/me", "GET");
 }
 
+export async function buscarMeuPerfil() {
+    return await chamadaAPI("/usuario/me", "GET");
+}
+
 export async function logoutUsuario() {
     return await chamadaAPI("/auth/logout", "POST");
 }
