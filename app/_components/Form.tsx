@@ -22,7 +22,7 @@ export default function Form({
     return (
         <section className="relative isolate overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm">
 
-            <div className="relative z-10 border-b border-slate-100 bg-gradient-to-r from-blue-800 via-blue-700 to-blue-600 px-6 py-6 text-white sm:px-8">
+            <div className="relative z-10 border-b border-slate-100 bg-gray-100 px-6 py-6 text-gray-600 sm:px-8">
                 <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
                     {title}
                 </h1>
