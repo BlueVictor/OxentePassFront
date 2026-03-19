@@ -45,7 +45,7 @@ export default async function categoria ({ params }: { params: { tag: string } }
     <div className="flex justify-center">
       <main className="w-17/20">
         <HeaderCard
-          pageTitle="Catalogo"
+          pageTitle="Categoria"
           headerTitle={tag}
           details={`Veja eventos e cidades com a categoria ${tag}`}
           highlightLabel="Itens da categoria"

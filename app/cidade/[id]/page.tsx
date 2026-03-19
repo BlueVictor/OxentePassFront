@@ -45,7 +45,7 @@ export default async function cidade ({ params }: { params: { id: string } }) {
     <div className="flex justify-center">
       <main className="w-17/20">
         <HeaderCard
-          pageTitle="Catalogo"
+          pageTitle="Cidade"
           headerTitle={cidade.nome}
           details={cidade.descricao}
           highlightLabel="Eventos cadastrados"
