@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import HeaderCard from "../../_components/HeaderCard";
 import DetailsCard from "../../_components/DetailsCard";
+import ActionCard from "../../_components/ActionCard";
 import { buscarMeuPerfil } from "../../../backend/chamadaPadrao";
 import { useAuth } from "../../_components/AuthProvider";
 
@@ -87,6 +88,14 @@ export default function MeuPerfilPage() {
                     },
                 ]}
             />
+
+            <ActionCard
+                href="/organizador"
+                badge="Novo passo"
+                title="Torne-se um Organizador"
+                description="Hospede e gerencie eventos conosco."
+            />
+
         </div>
     );
 }
