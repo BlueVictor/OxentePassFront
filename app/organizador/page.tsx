@@ -1,5 +1,5 @@
 
-import { OrgMenuCard } from "../_components/OrgMenuCard";
+import { OrgMenuCard } from "../_components/Organizador/OrgMenuCard";
 import "../globals.css";
 
 export default function organizador () {

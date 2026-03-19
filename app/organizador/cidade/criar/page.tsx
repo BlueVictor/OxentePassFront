@@ -25,7 +25,7 @@ async function criarCidade (formData: FormData) {
 	redirect ("/organizador/cidade") 
 }
 
-export default function () {
+export default function criar () {
   return (
 		<div className="flex flex-row justify-center">
       <main className="w-3/5">
@@ -40,9 +40,23 @@ export default function () {
 				>
 					<div className="flex flex-col gap-2">
 						<label htmlFor="nome">Nome</label>
-						<input type="text" name="nome" id="nome" placeholder="Nome" required className="border border-slate-200 rounded-xl p-2"/>
+						<input 
+							type="text" 
+							name="nome" 
+							id="nome" 
+							placeholder="Nome" 
+							className="border border-slate-200 rounded-xl p-2"
+							required 
+						/>
+
 						<label htmlFor="descricao">Descrição</label>
-						<textarea name="descricao" id="descricao" rows={4} required className="border border-slate-200 rounded-xl"/>
+						<textarea 
+							name="descricao" 
+							id="descricao" 
+							rows={4} 
+							className="border border-slate-200 rounded-xl p-2"
+							required 
+						/>
 					</div>
 				</Form>
 			</main>
