@@ -4,6 +4,7 @@
 export async function chamadaAPI (rota, metodo, body = {}) {
     try {
         const apiResponse = await fetch (`${process.env.NEXT_PUBLIC_BACKEND_API_URL}${rota}`, {
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json"
             },
@@ -53,4 +54,12 @@ export async function chamadaAPI (rota, metodo, body = {}) {
         )
         */
     }
+}
+
+export async function buscarUsuarioAutenticado() {
+    return await chamadaAPI("/auth/me", "GET");
+}
+
+export async function logoutUsuario() {
+    return await chamadaAPI("/auth/logout", "POST");
 }
