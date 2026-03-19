@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import "../../globals.css";
 import "./page.css"
-import PontoVendaCard from "@/app/_components/PontoVendaCard";
+import PontoVendaCard from "@/app/_components/PontoVenda/PontoVendaCard";
 
 async function getEvento (idEvento: string) {
   const response = await chamadaAPI(
