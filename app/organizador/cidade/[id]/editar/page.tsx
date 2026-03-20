@@ -2,34 +2,92 @@
 import { chamadaAPI } from "../../../../../backend/chamadaPadrao";
 import { redirect } from "next/navigation";
 import Form from "@/app/_components/Form";
+import CategoriaSelector from "@/app/_components/Organizador/CategoriaSelector";
 import "../../../../globals.css";
 
 var idCidade : string
+var categCidade: any[] = []
 
 async function editarCidade (formData: FormData) {
   'use server'
 
-  const json = Object.fromEntries(
-    Array.from(formData.entries()).filter(([key]) => !key.startsWith('$ACTION_')
-  ));
+  // Edição da cidade
+	const data = {
+		nome: formData.get("nome"),
+		descricao: formData.get("descricao")
+	}
 
   const response = await chamadaAPI(
-    `/cidade/${idCidade}`, 
-    "PUT", 
-    json
+    `/cidade/${idCidade}`, "PUT", data
   )
   
   if (!response) {
     console.error("Falha na edição de cidade")
     return
   }
+
+  // Adição e remoção de categorias
+	const tagsExistentes = [...new Set(formData.getAll('tagsExistentes').map(Number))]
+  const tagsNovas = formData.getAll('tagsNovas')
+
+  console.log("tagsExistentes: " + tagsExistentes)
+  console.log("tagsNovas: " + tagsNovas)
+  
+	tagsExistentes.forEach(async tag => {
+    if (!categCidade.some(tagCidade => Number(tag) === tagCidade.id)) {
+      await addCategExistente(idCidade, tag.toString())
+    }
+	});
+
+  categCidade.forEach(async tagCidade => {
+    if (!tagsExistentes.some(tag => Number(tag) === tagCidade.id)) {
+      await delCategExistente(idCidade, tagCidade.id.toString())
+    }
+	});
+
+	tagsNovas.forEach(async tag => {
+		await addCategNova(idCidade, tag.toString())
+	});
   
   redirect ("/organizador/cidade") 
 }
 
+async function addCategExistente (idCidade: string, categ: string) {
+	const response = await chamadaAPI(
+		`/cidade/${idCidade}/addTag/${categ}`, "PATCH"
+	)
+	
+	if (!response) {
+		console.error("Falha na adição da categoria " + categ)
+		return
+	}
+}
+
+async function delCategExistente (idCidade: string, categ: string) {
+	const response = await chamadaAPI(
+		`/cidade/${idCidade}/removerTag/${categ}`, "PATCH"
+	)
+	
+	if (!response) {
+		console.error("Falha na remoção da categoria " + categ)
+		return
+	}
+}
+
+async function addCategNova (idCidade: string, categ: string) {
+	const response = await chamadaAPI(
+		`/cidade/${idCidade}/addTag`, "PATCH", {tag: categ}
+	)
+	
+	if (!response) {
+		console.error("Falha na adição da categoria " + categ)
+		return
+	}
+}
+
 async function getCidade () {
   const response = await chamadaAPI(
-    `/cidade?id=${idCidade}`, 
+    `/cidade/filtro?id=${idCidade}`, 
     "GET", 
   )
   
@@ -41,9 +99,25 @@ async function getCidade () {
   return response.content
 }
 
+async function getCategorias () {
+  const response = await chamadaAPI(
+    `/tag`, 
+    "GET" 
+  )
+  
+  if (!response) {
+    console.error("Falha na obtenção das categorias")
+    return
+  }
+  
+  return response.content
+}
+
 export default async function editar ({ params }: { params: { id: string } }) {
   idCidade = (await params).id
   const cidade = (await getCidade())[0]
+  const categorias = await getCategorias()
+  categCidade = cidade.tags
 
   return (
     <div className="flex flex-row justify-center">
@@ -63,7 +137,6 @@ export default async function editar ({ params }: { params: { id: string } }) {
               type="text" 
               name="nome" 
               id="nome" 
-              placeholder="Nome" 
               className="border border-slate-200 rounded-xl p-2" 
               defaultValue={cidade.nome}
               required 
@@ -77,6 +150,11 @@ export default async function editar ({ params }: { params: { id: string } }) {
               defaultValue={cidade.descricao}
               className="border border-slate-200 rounded-xl p-2" 
               required 
+            />
+
+            <CategoriaSelector 
+              tagsExistentes={categorias}
+              tagsSelecionadasInit={cidade.tags}
             />
           </div>
         </Form>
