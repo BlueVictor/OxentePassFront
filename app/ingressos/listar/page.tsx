@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { chamadaAPI } from "../../../backend/chamadaPadrao";
 import { LayoutGeral } from "../../_components/LayoutGeral";
 import { HeaderInterno } from "../../_components/HeaderInterno";
-import { TabelaIng } from "../../_components/TabelaIng";
+import { TabelaIng } from "../../_components/Organizador/Ingressos/TabelaIng";
 
 export default function ListarIngressos() {
   const [ingressos, setIngressos] = useState<any[]>([]);

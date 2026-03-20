@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { chamadaAPI } from "../../../backend/chamadaPadrao";
 import { LayoutGeral } from "../../_components/LayoutGeral";
 import { HeaderInterno } from "../../_components/HeaderInterno";
-import { TabelaSimples } from "../../_components/TabelaSimples";
+import { TabelaSimples } from "../../_components/Organizador/Vendas/TabelaSimples";
 
 export default function FiltrarVendas() {
   const [status, setStatus] = useState(''); 

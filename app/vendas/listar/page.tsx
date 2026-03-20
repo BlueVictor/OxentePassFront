@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { chamadaAPI } from "../../../backend/chamadaPadrao";
 import { LayoutGeral } from "../../_components/LayoutGeral";
 import { HeaderInterno } from "../../_components/HeaderInterno";
-import { TabelaCompleta } from "../../_components/TabelaCompleta";
+import { TabelaCompleta } from "../../_components/Organizador/Vendas/TabelaCompleta";
 import { ModalAcoes } from "../../_components/ModalAcoes";
 import "../../globals.css";
 

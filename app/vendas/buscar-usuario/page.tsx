@@ -4,7 +4,7 @@ import { chamadaAPI } from "../../../backend/chamadaPadrao";
 import { LayoutGeral } from "../../_components/LayoutGeral";
 import { HeaderInterno } from "../../_components/HeaderInterno";
 import { FormBuscaPadrao } from "../../_components/FormBuscaPadrao";
-import { TabelaSimples } from "../../_components/TabelaSimples";
+import { TabelaSimples } from "../../_components/Organizador/Vendas/TabelaSimples";
 
 export default function BuscarVendaPorUsuario() {
   const [idUsuario, setIdUsuario] = useState('');
