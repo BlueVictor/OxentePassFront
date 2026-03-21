@@ -27,6 +27,24 @@ export default function LoginPage() {
     }));
   };
 
+  const deveRedirecionarParaHome = () => {
+    const referrer = document.referrer;
+
+    if (!referrer) {
+      return false;
+    }
+
+    try {
+      const referrerURL = new URL(referrer);
+      const mesmaOrigem = referrerURL.origin === window.location.origin;
+
+      return mesmaOrigem && referrerURL.pathname.startsWith("/cadastro");
+    }
+    catch {
+      return false;
+    }
+  };
+
   const formAction = async () => {
     const response = await chamadaAPI(
       "/usuario/login",
@@ -40,6 +58,13 @@ export default function LoginPage() {
     }
 
     await atualizarUsuario();
+
+    if (deveRedirecionarParaHome()) {
+      router.push("/");
+      router.refresh();
+      return;
+    }
+
     router.back();
     router.refresh();
   }

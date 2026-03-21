@@ -2,25 +2,38 @@
 
 import { Star } from "lucide-react";
 import { useState } from "react";
-import { adicionarAvaliacaoEvento } from "../../../backend/chamadaPadrao";
+import { adicionarAvaliacaoEvento } from "../../../backend/chamadasEvento";
 import { useToast } from "../ToastProvider";
+
+type AvaliacaoPayload = {
+    comentario: string;
+    nota: number;
+};
 
 type AvaliacaoFormProps = {
     idEvento: number | string;
     titulo?: string;
     descricao?: string;
-    onSuccess?: (avaliacao: { comentario: string; nota: number }) => void | Promise<void>;
+    textoBotao?: string;
+    mensagemSucesso?: string;
+    avaliacaoInicial?: AvaliacaoPayload | null;
+    onSubmitAvaliacao?: (avaliacao: AvaliacaoPayload) => Promise<unknown>;
+    onSuccess?: (avaliacao: AvaliacaoPayload) => void | Promise<void>;
 };
 
 export default function AvaliacaoForm({
     idEvento,
     titulo = "Deixe sua avaliação",
     descricao = "Conte como foi sua experiência neste evento.",
+    textoBotao = "Enviar avaliação",
+    mensagemSucesso = "Avaliação enviada com sucesso.",
+    avaliacaoInicial = null,
+    onSubmitAvaliacao,
     onSuccess,
 }: AvaliacaoFormProps) {
     const { showToast } = useToast();
-    const [nota, setNota] = useState(0);
-    const [comentario, setComentario] = useState("");
+    const [nota, setNota] = useState(avaliacaoInicial?.nota ?? 0);
+    const [comentario, setComentario] = useState(avaliacaoInicial?.comentario ?? "");
     const [enviando, setEnviando] = useState(false);
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -38,10 +51,14 @@ export default function AvaliacaoForm({
 
         setEnviando(true);
 
-        const response = await adicionarAvaliacaoEvento(idEvento, {
+        const avaliacaoPayload = {
             comentario: comentario.trim(),
             nota,
-        });
+        };
+
+        const response = onSubmitAvaliacao
+            ? await onSubmitAvaliacao(avaliacaoPayload)
+            : await adicionarAvaliacaoEvento(idEvento, avaliacaoPayload);
 
         setEnviando(false);
 
@@ -50,18 +67,13 @@ export default function AvaliacaoForm({
             return;
         }
 
-        showToast("Avaliação enviada com sucesso.", "success");
-
-        const avaliacaoCriada = {
-            comentario: comentario.trim(),
-            nota
-        };
+        showToast(mensagemSucesso, "success");
 
         setComentario("");
         setNota(0);
 
         if (onSuccess) {
-            await onSuccess(avaliacaoCriada);
+            await onSuccess(avaliacaoPayload);
         }
     };
 
@@ -124,7 +136,7 @@ export default function AvaliacaoForm({
                         disabled={enviando}
                         className="botao-primario disabled:cursor-not-allowed disabled:opacity-70"
                     >
-                        {enviando ? "Enviando..." : "Enviar avaliação"}
+                        {enviando ? "Enviando..." : textoBotao}
                     </button>
                 </div>
             </form>

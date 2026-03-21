@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import HeaderCard from "../../_components/HeaderCard";
 import DetailsCard from "../../_components/DetailsCard";
 import ActionCard from "../../_components/ActionCard";
-import { buscarMeuPerfil, buscarMeuPerfilOrganizador } from "../../../backend/chamadaPadrao";
+import { buscarMeuPerfil, buscarMeuPerfilOrganizador } from "../../../backend/chamadasUsuario";
 import { useAuth } from "../../_components/Auth/AuthProvider";
 import { useToast } from "../../_components/ToastProvider";
 

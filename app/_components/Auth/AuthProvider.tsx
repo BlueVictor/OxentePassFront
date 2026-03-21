@@ -1,7 +1,7 @@
 'use client'
 
 import { createContext, useContext, useEffect, useState } from "react";
-import { buscarUsuarioAutenticado, logoutUsuario } from "../../../backend/chamadaPadrao";
+import { buscarUsuarioAutenticado, logoutUsuario } from "../../../backend/chamadasAuth";
 
 type UsuarioAutenticado = {
     id: number;
