@@ -20,7 +20,7 @@ function formatValue(value: any, type?: string) {
   return String(value)
 }
 
-export function OrgLista ({ data, columns, editBasePath, deleteAction, subEventSuport = false }: any) {
+export function OrgLista ({ data, columns, editBasePath, deleteAction, subEventSupport }: any) {
   const [selectedItem, setSelectedItem] = useState<any>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -58,9 +58,10 @@ export function OrgLista ({ data, columns, editBasePath, deleteAction, subEventS
               ))}
 
               <td className="p-3 text-center min-w-30 max-w-30 space-x-2">
-                {subEventSuport && (//ADICIONAR VERIFICAÇÃO (COMPOSTO OU SIMPLES)
+                {/* Gerar botão de ação para lista de Eventos */}
+                {subEventSupport && item.ehSimples == false && (
                   <Link
-                    href={`${editBasePath}/${item.id}/editar`} //MODIFICAR
+                    href={`${editBasePath}/${item.id}/subevento`}
                   >
                     <button
                       title="Criar Sub-Evento" 

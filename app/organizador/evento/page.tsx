@@ -83,7 +83,7 @@ export default async function OrgListEvento (props: any) {
           ]}
           editBasePath={"/organizador/evento"}
           deleteAction={deletar}
-          subEventSuport={true}
+          subEventSupport={true}
         />
 
         <Paginacao page={pagina} totalPages={eventos.totalPages}/>
