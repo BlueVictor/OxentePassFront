@@ -4,12 +4,23 @@ import { useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ModalConfirmacao } from './ModalConfirmacao';
+import { converterData } from '@/funcoes/helpers';
 
 function getValue(obj: any, path: string) {
   return path.split('.').reduce((acc, key) => acc?.[key], obj)
 }
 
-export function OrgLista ({ data, columns, editBasePath, deleteAction }: any) {
+function formatValue(value: any, type?: string) {
+  if (value == null) return ''
+
+  if (type === 'date') {
+    return converterData(value)
+  }
+
+  return String(value)
+}
+
+export function OrgLista ({ data, columns, editBasePath, deleteAction, subEventSuport = false }: any) {
   const [selectedItem, setSelectedItem] = useState<any>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -42,16 +53,29 @@ export function OrgLista ({ data, columns, editBasePath, deleteAction }: any) {
             <tr key={item.id} className="border-t">
               {columns.map((col: any, i: number) => (
                 <td key={i} className="p-3 max-w-60 truncate">
-                  {col.render
-                    ? col.render(item)
-                    : typeof col.accessor === 'function'
-                      ? col.accessor(item)
-                      : String(getValue(item, col.accessor))
-                  }
+                  {formatValue(getValue(item, col.accessor), col.type)}
                 </td>
               ))}
 
-              <td className="p-3 text-center min-w-20 max-w-20 space-x-2">
+              <td className="p-3 text-center min-w-30 max-w-30 space-x-2">
+                {subEventSuport && (//ADICIONAR VERIFICAÇÃO (COMPOSTO OU SIMPLES)
+                  <Link
+                    href={`${editBasePath}/${item.id}/editar`} //MODIFICAR
+                  >
+                    <button
+                      title="Criar Sub-Evento" 
+                      className="p-2 bg-teal-200 rounded-xl cursor-pointer"
+                    >
+                      <Image 
+                        src={"/add-subevento.png"}
+                        alt="icone add sub-evento"
+                        height={24}
+                        width={24}
+                      />
+                    </button>
+                  </Link>
+                )}
+
                 {editBasePath && (
                   <Link
                     href={`${editBasePath}/${item.id}/editar`}
