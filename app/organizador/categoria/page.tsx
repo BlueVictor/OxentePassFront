@@ -55,8 +55,8 @@ export default async function OrgListCategoria (props: any) {
   return (
     <div className="flex flex-row justify-center">
       <main className="w-4/5">
-        <div className="flex flex-row justify-between items-center">
-          <h1 className="text-4xl mb-10">Categorias</h1>
+        <div className="flex flex-row justify-between items-center mb-6">
+          <h1 className="text-4xl">Categorias</h1>
           <Link
             href={"/organizador/categoria/criar"}
           >
@@ -66,7 +66,7 @@ export default async function OrgListCategoria (props: any) {
                 src={"/criar.png"}
                 alt="icone mais"
                 height={24}
-                width={24}
+                width={26}
               />
             </button>
           </Link>

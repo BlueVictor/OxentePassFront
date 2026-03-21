@@ -55,8 +55,8 @@ export default async function OrgListCidade (props: any) {
   return (
     <div className="flex flex-row justify-center">
       <main className="w-4/5">
-        <div className="flex flex-row justify-between items-center">
-          <h1 className="text-4xl mb-10">Cidades</h1>
+        <div className="flex flex-row justify-between items-center mb-6">
+          <h1 className="text-4xl">Cidades</h1>
           <Link
             href={"/organizador/cidade/criar"}
           >
@@ -66,7 +66,7 @@ export default async function OrgListCidade (props: any) {
                 src={"/criar.png"}
                 alt="icone mais"
                 height={24}
-                width={24}
+                width={26}
               />
             </button>
           </Link>

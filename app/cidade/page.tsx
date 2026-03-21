@@ -1,10 +1,10 @@
 
 import { chamadaAPI } from "../../backend/chamadaPadrao";
-import "../globals.css";
-import "./page.css";
 import HeaderCard from "../_components/HeaderCard";
 import { CidadeCard } from "../_components/CidadeCard";
 import { Paginacao } from "../_components/Paginacao";
+import "../globals.css";
+import "./page.css";
 
 async function getCidades (pagina: number) {
   const response = await chamadaAPI(

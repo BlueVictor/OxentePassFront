@@ -13,11 +13,17 @@ export function CidadeCard({ item }: CidadeCardProps) {
     >
       <div className="cidade-card">
         <h2 className="text-2xl">{item.nome}</h2>
-        <p className="mt-2">{item.descricao}</p>
 
-        {item.tags.length > 0 && <hr className="my-3" />}
+        <div className="flex-1 flex items-center justify-center">
+          <p className="mt-2 line-clamp-3">
+            {item.descricao}
+          </p>
+        </div>
 
-        <CidadeTagCard tags={item.tags} />
+        <div>
+          {item.tags.length > 0 && <hr className="my-3" />}
+          <CidadeTagCard tags={item.tags} />
+        </div>
       </div>
     </Link>
   );

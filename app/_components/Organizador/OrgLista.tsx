@@ -21,7 +21,7 @@ export function OrgLista ({ data, columns, editBasePath, deleteAction }: any) {
       </form>
 
       {/* Corpo da tabela */}
-      <table className="w-full rounded-xl overflow-hidden">
+      <table className="mb-3 w-full rounded-2xl shadow-md overflow-hidden">
         <thead className="bg-gray-100">
           <tr>
             {columns.map((col: any, i: number) => (
@@ -44,12 +44,15 @@ export function OrgLista ({ data, columns, editBasePath, deleteAction }: any) {
                 </td>
               ))}
 
-              <td className="p-3 text-center space-x-2">
+              <td className="p-3 text-center min-w-20 max-w-20 space-x-2">
                 {editBasePath && (
                   <Link
                     href={`${editBasePath}/${item.id}/editar`}
                   >
-                    <button className="p-2 bg-yellow-400 rounded-xl cursor-pointer">
+                    <button
+                      title="Editar" 
+                      className="p-2 bg-yellow-400 rounded-xl cursor-pointer"
+                    >
                       <Image 
                         src={"/editar.png"}
                         alt="icone editar"
@@ -62,6 +65,7 @@ export function OrgLista ({ data, columns, editBasePath, deleteAction }: any) {
 
                 {deleteAction && (
                   <button
+                    title="Deletar" 
                     onClick={() => setSelectedItem(item)}
                     className="p-2 bg-red-600 rounded-xl cursor-pointer"
                   >
@@ -88,7 +92,7 @@ export function OrgLista ({ data, columns, editBasePath, deleteAction }: any) {
           setSelectedItem(null)
         }}
         title="Excluir item"
-        description={`Tem certeza que deseja excluir "${selectedItem?.nome ?? ''}"?`}
+        description={`Tem certeza que deseja excluir "${selectedItem?.nome ?? 'este item'}"?`}
       />
     </>
   );
