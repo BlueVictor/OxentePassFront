@@ -5,6 +5,10 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ModalConfirmacao } from './ModalConfirmacao';
 
+function getValue(obj: any, path: string) {
+  return path.split('.').reduce((acc, key) => acc?.[key], obj)
+}
+
 export function OrgLista ({ data, columns, editBasePath, deleteAction }: any) {
   const [selectedItem, setSelectedItem] = useState<any>(null);
   const formRef = useRef<HTMLFormElement>(null);
@@ -40,7 +44,10 @@ export function OrgLista ({ data, columns, editBasePath, deleteAction }: any) {
                 <td key={i} className="p-3 max-w-60 truncate">
                   {col.render
                     ? col.render(item)
-                    : String(item[col.accessor])}
+                    : typeof col.accessor === 'function'
+                      ? col.accessor(item)
+                      : String(getValue(item, col.accessor))
+                  }
                 </td>
               ))}
 
