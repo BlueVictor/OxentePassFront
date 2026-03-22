@@ -132,7 +132,7 @@ export default async function editar ({ params }: { params: { id: string } }) {
           }
         >
           <div className="flex flex-col gap-2">
-            <label htmlFor="nome">Nome</label>
+            <label htmlFor="nome">Nome <b className="text-red-500">*</b></label>
             <input 
               type="text" 
               name="nome" 
@@ -142,7 +142,7 @@ export default async function editar ({ params }: { params: { id: string } }) {
               required 
             />
 
-            <label htmlFor="descricao">Descrição</label>
+            <label htmlFor="descricao">Descrição <b className="text-red-500">*</b></label>
             <textarea 
               name="descricao" 
               id="descricao" 

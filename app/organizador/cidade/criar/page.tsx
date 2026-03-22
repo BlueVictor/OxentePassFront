@@ -90,7 +90,7 @@ export default async function criar () {
 					}
 				>
 					<div className="flex flex-col gap-2">
-						<label htmlFor="nome">Nome</label>
+						<label htmlFor="nome">Nome <b className="text-red-500">*</b></label>
 						<input 
 							type="text" 
 							name="nome" 
@@ -100,7 +100,7 @@ export default async function criar () {
 							required 
 						/>
 
-						<label htmlFor="descricao">Descrição</label>
+						<label htmlFor="descricao">Descrição <b className="text-red-500">*</b></label>
 						<textarea 
 							name="descricao" 
 							id="descricao" 

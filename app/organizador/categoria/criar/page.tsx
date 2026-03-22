@@ -39,7 +39,7 @@ export default async function criar () {
           }
         >
           <div className="flex flex-col gap-2">
-            <label htmlFor="tag">Nome</label>
+            <label htmlFor="tag">Nome <b className="text-red-500">*</b></label>
             <input 
               type="text" 
               name="tag" 
