@@ -28,13 +28,14 @@ export default function CategoriaSelector({ tagsExistentes, tagsSelecionadasInit
       <h1 className="my-1">Gerir Categorias</h1>
       <div className="space-y-3 border border-slate-200 rounded-xl p-3">
         {/* Subtitulos */}
-        <div className='flex flex-row gap-4'>
+        <div className='flex flex-row gap-5'>
           <h2 className='w-1/2'>Selecione categorias existentes</h2>
+          <h2></h2>
           <h2 className='w-1/2'>Crie uma nova categoria</h2>
         </div>
 
         {/* Seleção de Categorias */}
-        <div className='flex flex-row gap-4'>
+        <div className='flex flex-row gap-5'>
           {/* TAGS EXISTENTES */}
           <div className="flex flex-wrap gap-3 w-1/2">
             {tagsExistentes.map((tag: any) => {
@@ -64,7 +65,7 @@ export default function CategoriaSelector({ tagsExistentes, tagsSelecionadasInit
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Nova Categoria"
-                className="border border-slate-200 rounded-xl p-2" 
+                className="border border-slate-200 rounded-xl p-2 w-full" 
               />
 
               <button 
