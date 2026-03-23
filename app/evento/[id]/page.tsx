@@ -78,15 +78,16 @@ export default async function Evento(props: any) {
                 </div>
               }
             </div>
+
             {/* Info geral */}
-            <div className="evento-conteudo">
+            <div className="pl-5">
               {/* Nome e descrição */}
               <h1 className="titulo">{evento.nome}</h1>
               <p className="mt-2 text-lg">{evento.descricao}</p>
 
               {/* Data e local */}
               <div className="flex flex-row gap-5">
-                <div className="evento-conteudo-card">
+                <div className="p-3 mt-5 w-80 bg-white rounded-xl border border-slate-100 text-center shadow-sm">
                   <h2 className="text-3xl">Onde?</h2>
                   <p className="mt-2 mb-1 text-lg">{evento.cidade.nome}, {evento.endereco.bairro}</p>
                   <p className="mb-2 text-lg">{evento.endereco.rua}, nº{evento.endereco.numero}</p>
@@ -94,11 +95,13 @@ export default async function Evento(props: any) {
                   <p className="mt-2 mb-1 text-lg">CEP: {evento.endereco.cep}</p>
                 </div>
 
-                <div className="evento-conteudo-card">
+                <div className="flex flex-col p-3 mt-5 w-80 bg-white rounded-xl border border-slate-100 text-center shadow-sm">
                   <h2 className="text-3xl">Quando?</h2>
-                  <p className="mt-2 mb-1.5 text-lg">{converterDataHora(evento.dataHoraInicio)}</p>
-                  <p className="mb-1.5 text-lg">a</p>
-                  <p className="text-lg">{converterDataHora(evento.dataHoraFim)}</p>
+                  <div className="flex flex-col flex-1 items-center justify-center">
+                    <p className="mt-2 mb-1.5 text-lg">{converterDataHora(evento.dataHoraInicio)}</p>
+                    <p className="mb-1.5 text-lg">a</p>
+                    <p className="text-lg">{converterDataHora(evento.dataHoraFim)}</p>
+                  </div>
                 </div>
               </div>
 
@@ -174,12 +177,16 @@ export default async function Evento(props: any) {
               </div>
             </div>
           </div>
+
           <div className=""> {/* Lado "direito" */}
             {/* Ingressos (barra lateral) */}
-            <div className="evento-ingressos">
+            <div className="absolute p-4 flex flex-col w-80 border border-slate-200 rounded-2xl gap-3 bg-white top-0 right-0 h-full z-50">
               <h2 className="text-3xl">Ingressos</h2>
               {evento.ingressos.map((item: any) => (
-                <div className="ingresso-card" key={item.id}>
+                <div 
+                  key={item.id}
+                  className="p-4 w-70 justify-center bg-indigo-100 rounded-xl text-shadow-xs" 
+                >
                   <h3 className="text-xl mb-2">{item.tipo}</h3>
                   <p>R$ {item.valorBase.toFixed(2)}</p>
                   <p>Qtde restante: {item.quantidadeDisponivel} unidade(s)</p>

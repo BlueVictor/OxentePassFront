@@ -44,14 +44,6 @@ body {
   @apply p-3 text-gray-100 font-semibold rounded-md cursor-pointer;
 }
 
-.evento-card {
-  @apply bg-gray-300 w-120 h-80 rounded-xl shadow-sm;
-}
-
-.evento-card-data {
-  @apply p-3 text-shadow-xs;
-}
-
 .card {
   background: #e3e3e3;
   background: linear-gradient(90deg,rgba(227, 227, 227, 1) 0%, rgba(245, 245, 245, 1) 92%);

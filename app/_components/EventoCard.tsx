@@ -12,7 +12,7 @@ export function EventoCard({ item }: EventoCardProps) {
       href={`/evento/${item.id}`}
       className="cursor-pointer"
     >
-      <div className="evento-card">
+      <div className="bg-gray-300 w-120 h-80 rounded-xl shadow-sm">
         <div className="relative w-120 h-60 text-center">
           <Image
             src={item.imagem ? getS3URL(item.imagem.chaveS3) : "/placeholder.png"}
@@ -22,11 +22,16 @@ export function EventoCard({ item }: EventoCardProps) {
           />
         </div>
 
-        <div className="evento-card-data">
+        <div className="px-4 py-3 text-shadow-xs">
           <h2 className="text-xl">{item.nome}</h2>
-          <p className='mt-1'>
-            De {converterData(item.dataHoraInicio)} à {converterData(item.dataHoraFim)}
-          </p>
+          <div className="mt-1 flex flex-row justify-between items-center">
+            <div>
+              De {converterData(item.dataHoraInicio)} à {converterData(item.dataHoraFim)}
+            </div>
+            <div>
+              {item.cidade.nome}
+            </div>
+          </div>
         </div>
       </div>
     </Link>

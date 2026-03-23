@@ -4,8 +4,23 @@ import { useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ModalConfirmacao } from './ModalConfirmacao';
+import { converterData } from '@/funcoes/helpers';
 
-export function OrgLista ({ data, columns, editBasePath, deleteAction }: any) {
+function getValue(obj: any, path: string) {
+  return path.split('.').reduce((acc, key) => acc?.[key], obj)
+}
+
+function formatValue(value: any, type?: string) {
+  if (value == null) return ''
+
+  if (type === 'date') {
+    return converterData(value)
+  }
+
+  return String(value)
+}
+
+export function OrgLista ({ data, columns, editBasePath, deleteAction, subEventSupport }: any) {
   const [selectedItem, setSelectedItem] = useState<any>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -21,7 +36,7 @@ export function OrgLista ({ data, columns, editBasePath, deleteAction }: any) {
       </form>
 
       {/* Corpo da tabela */}
-      <table className="w-full rounded-xl overflow-hidden">
+      <table className="mb-3 w-full rounded-2xl shadow-md overflow-hidden">
         <thead className="bg-gray-100">
           <tr>
             {columns.map((col: any, i: number) => (
@@ -38,18 +53,38 @@ export function OrgLista ({ data, columns, editBasePath, deleteAction }: any) {
             <tr key={item.id} className="border-t">
               {columns.map((col: any, i: number) => (
                 <td key={i} className="p-3 max-w-60 truncate">
-                  {col.render
-                    ? col.render(item)
-                    : String(item[col.accessor])}
+                  {formatValue(getValue(item, col.accessor), col.type)}
                 </td>
               ))}
 
-              <td className="p-3 text-center space-x-2">
+              <td className="p-3 text-center min-w-30 max-w-30 space-x-2">
+                {/* Gerar botão de ação para lista de Eventos */}
+                {subEventSupport && item.ehSimples == false && (
+                  <Link
+                    href={`${editBasePath}/${item.id}/subevento`}
+                  >
+                    <button
+                      title="Criar Sub-Evento" 
+                      className="p-2 bg-teal-200 rounded-xl cursor-pointer"
+                    >
+                      <Image 
+                        src={"/add-subevento.png"}
+                        alt="icone add sub-evento"
+                        height={24}
+                        width={24}
+                      />
+                    </button>
+                  </Link>
+                )}
+
                 {editBasePath && (
                   <Link
                     href={`${editBasePath}/${item.id}/editar`}
                   >
-                    <button className="p-2 bg-yellow-400 rounded-xl cursor-pointer">
+                    <button
+                      title="Editar" 
+                      className="p-2 bg-yellow-400 rounded-xl cursor-pointer"
+                    >
                       <Image 
                         src={"/editar.png"}
                         alt="icone editar"
@@ -62,6 +97,7 @@ export function OrgLista ({ data, columns, editBasePath, deleteAction }: any) {
 
                 {deleteAction && (
                   <button
+                    title="Deletar" 
                     onClick={() => setSelectedItem(item)}
                     className="p-2 bg-red-600 rounded-xl cursor-pointer"
                   >
@@ -88,7 +124,7 @@ export function OrgLista ({ data, columns, editBasePath, deleteAction }: any) {
           setSelectedItem(null)
         }}
         title="Excluir item"
-        description={`Tem certeza que deseja excluir "${selectedItem?.nome ?? ''}"?`}
+        description={`Tem certeza que deseja excluir "${selectedItem?.nome ?? 'este item'}"?`}
       />
     </>
   );

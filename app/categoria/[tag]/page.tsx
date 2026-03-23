@@ -1,5 +1,5 @@
 
-import { CidadeCard } from "@/app/_components/CidadeCard";
+import { CidadeCard } from "@/app/_components/Cidade/CidadeCard";
 import { chamadaAPI } from "../../../backend/chamadaPadrao";
 import { EventoCard } from "../../_components/EventoCard";
 import "../../globals.css";

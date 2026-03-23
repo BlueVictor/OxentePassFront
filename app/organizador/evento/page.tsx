@@ -7,14 +7,14 @@ import Link from "next/link";
 import Image from "next/image";
 import "../../globals.css";
 
-async function getCidades (pagina: number) {
+async function getEventos (pagina: number) {
   const response = await chamadaAPI(
-    `/cidade?page=${pagina}&size=10`,
+    `/evento?page=${pagina}&size=10`, //to do: listar somente os eventos do organizador logado
     "GET"
   )
 
   if (!response) {
-    console.error("Falha no carregamento das cidades")
+    console.error("Falha no carregamento dos eventos")
     return []
   }
 
@@ -22,15 +22,15 @@ async function getCidades (pagina: number) {
 }
 
 //Faz a comunicação com o back
-async function deletarCidade (id: any) {
+async function deletarEvento (id: any) {
   const response = await chamadaAPI(
-    `/cidade/${id}`,
+    `/evento/${id}`,
     "DELETE"
   )
 
   if (!response) {
-    console.error("Falha na exclusão de cidade")
-    return []
+    console.error("Falha na exclusão do evento")
+    return
   }
 
   return response.content
@@ -41,27 +41,27 @@ async function deletar(formData: FormData) {
   'use server';
 
   const id = formData.get('id');
-  await deletarCidade(id);
+  await deletarEvento(id);
 
-  revalidatePath('/organizador/cidade');
+  revalidatePath('/organizador/evento');
 }
 
-export default async function OrgListCidade (props: any) {
+export default async function OrgListEvento (props: any) {
   const searchParams = await props.searchParams;
   const pagina = Number(searchParams?.pag ?? 0);
 
-  const cidades = await getCidades(pagina)
+  const eventos = await getEventos(pagina)
 
   return (
     <div className="flex flex-row justify-center">
       <main className="w-4/5">
         <div className="flex flex-row justify-between items-center mb-6">
-          <h1 className="text-4xl">Cidades</h1>
+          <h1 className="text-4xl">Eventos</h1>
           <Link
-            href={"/organizador/cidade/criar"}
+            href={"/organizador/evento/criar"}
           >
             <button className="p-3 flex flex-row gap-2 bg-blue-500 text-white rounded-2xl cursor-pointer text-xl">
-              Criar Cidade
+              Criar Evento
               <Image 
                 src={"/criar.png"}
                 alt="icone mais"
@@ -73,16 +73,20 @@ export default async function OrgListCidade (props: any) {
         </div>
 
         <OrgLista
-          data={cidades.content}
+          data={eventos.content}
           columns={[
             { header: "Nome", accessor: "nome" },
-            { header: "Descrição", accessor: "descricao" },
+            { header: "Descrição", accessor: "descricao" }, 
+            { header: "Cidade", accessor: "cidade.nome" }, 
+            { header: "Início", accessor: "dataHoraInicio", type: "date"}, 
+            { header: "Fim", accessor: "dataHoraFim", type: "date"}, 
           ]}
-          editBasePath={"/organizador/cidade"}
+          editBasePath={"/organizador/evento"}
           deleteAction={deletar}
+          subEventSupport={true}
         />
 
-        <Paginacao page={pagina} totalPages={cidades.totalPages}/>
+        <Paginacao page={pagina} totalPages={eventos.totalPages}/>
       </main>
     </div>
   );
