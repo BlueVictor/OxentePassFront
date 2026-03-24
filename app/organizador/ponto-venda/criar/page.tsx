@@ -41,7 +41,7 @@ export default function CriarPontoVendaPage() {
     );
 
     if (!response?.ok) {
-      showToast("Nao foi possivel criar o ponto de venda.", "error");
+      showToast("Não foi possível criar o ponto de venda.", "error");
       return;
     }
 

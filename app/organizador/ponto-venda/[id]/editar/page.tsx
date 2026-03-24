@@ -45,7 +45,7 @@ export default function EditarPontoVendaPage() {
 
       if (!pontoVenda) {
         console.error("Falha na obtencao do ponto de venda");
-        showToast("Nao foi possivel carregar o ponto de venda.", "error");
+        showToast("Não foi possível carregar o ponto de venda.", "error");
         setCarregando(false);
         return;
       }
@@ -90,7 +90,7 @@ export default function EditarPontoVendaPage() {
 
     if (!response?.ok) {
       console.error("Falha na edicao do ponto de venda");
-      showToast("Nao foi possivel editar o ponto de venda.", "error");
+      showToast("Não foi possível editar o ponto de venda.", "error");
       return;
     }
 

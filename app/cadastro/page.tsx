@@ -22,20 +22,20 @@ export default function CadastroPage() {
     const { name, value } = e.target;
 
     setFormData((prev) => ({
-        ...prev,
-          [name]: value
+      ...prev,
+      [name]: value
     }));
   };
 
   const formAction = async () => {
     const response = await chamadaAPI(
-      "/usuario", 
-      "POST", 
+      "/usuario",
+      "POST",
       formData
     )
 
     if (!response) {
-      showToast("Nao foi possivel realizar o cadastro com os dados informados.", "error");
+      showToast("Não foi possível realizar o cadastro com os dados informados.", "error");
       return
     }
 
