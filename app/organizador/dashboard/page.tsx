@@ -277,7 +277,7 @@ function TooltipChart({
     return (
         <div className="rounded-2xl border border-slate-200 bg-white px-3 py-2 shadow-md">
             <p className="text-sm font-semibold text-slate-900">{nome}</p>
-            <p className="mt-1 text-xs text-slate-500">{item.value} vinculo(s)</p>
+            <p className="mt-1 text-xs text-slate-500">{item.value} vínculo(s)</p>
         </div>
     );
 }
@@ -355,8 +355,8 @@ export default function OrganizadorDashboardPage() {
             <div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
                 <HeaderCard
                     pageTitle="Organizador"
-                    headerTitle="Dashboard indisponivel"
-                    details="Esta area e exclusiva para contas com perfil de organizador."
+                    headerTitle="Dashboard indisponível"
+                    details="Esta área é exclusiva para contas com perfil de organizador."
                 />
             </div>
         );
@@ -368,11 +368,11 @@ export default function OrganizadorDashboardPage() {
                 <HeaderCard
                     pageTitle="Organizador"
                     headerTitle="Dashboard"
-                    details="Nao foi possivel carregar os dados consolidados da sua organizacao agora."
+                    details="Não foi possível carregar os dados consolidados da sua organização agora."
                 />
 
                 <div className="rounded-[2rem] border border-rose-200 bg-rose-50 px-6 py-5 text-sm leading-6 text-rose-700 shadow-sm">
-                    Tente novamente em alguns instantes. Se o problema persistir, vale conferir se o backend esta respondendo normalmente para os dados de eventos.
+                    Houve um problema interno. Tente novamente em alguns instantes.
                 </div>
             </div>
         );
@@ -388,7 +388,7 @@ export default function OrganizadorDashboardPage() {
             <HeaderCard
                 pageTitle="Organizador"
                 headerTitle={`Dashboard de ${usuario.nome}`}
-                details="Acompanhe os vinculos da sua operacao com foco em eventos, pontos de venda, cidades e categorias dos seus eventos."
+                details="Acompanhe os vínculos da sua operação com foco em eventos, pontos de venda, cidades e categorias dos seus eventos."
                 highlightLabel="Eventos vinculados"
                 highlightValue={dashboard.eventos.length}
             />
@@ -409,7 +409,7 @@ export default function OrganizadorDashboardPage() {
                         </div>
                     </div>
                     <p className="mt-4 text-sm text-slate-500">
-                        Total de eventos atualmente vinculados a sua organizacao.
+                        Total de eventos atualmente vinculados à sua organização.
                     </p>
                 </article>
 
@@ -428,7 +428,7 @@ export default function OrganizadorDashboardPage() {
                         </div>
                     </div>
                     <p className="mt-4 text-sm text-slate-500">
-                        Quantidade de locais fisicos associados aos seus eventos.
+                        Quantidade de locais físicos associados aos seus eventos.
                     </p>
                 </article>
 
@@ -447,7 +447,7 @@ export default function OrganizadorDashboardPage() {
                         </div>
                     </div>
                     <p className="mt-4 text-sm text-slate-500">
-                        Cidades onde sua grade atual de eventos esta presente.
+                        Cidades onde sua grade atual de eventos está presente.
                     </p>
                 </article>
             </section>
@@ -479,7 +479,7 @@ export default function OrganizadorDashboardPage() {
 
                     {dashboard.eventos.length === 0 ? (
                         <div className="mt-6 rounded-3xl border border-dashed border-slate-200 bg-slate-50 px-6 py-8 text-center text-sm text-slate-500">
-                            Nenhum evento esta vinculado ao seu perfil de organizador no momento.
+                            Nenhum evento está vinculado ao seu perfil de organizador no momento.
                         </div>
                     ) : (
                         <div className="mt-6 grid gap-3 md:grid-cols-2">
@@ -527,7 +527,7 @@ export default function OrganizadorDashboardPage() {
                                     Categorias ofertadas
                                 </p>
                                 <h2 className="mt-1 text-2xl font-bold text-slate-900">
-                                    Distribuicao por categoria
+                                    Distribuição por categoria
                                 </h2>
                             </div>
                         </div>
@@ -542,7 +542,7 @@ export default function OrganizadorDashboardPage() {
 
                     {dashboard.categorias.length === 0 ? (
                         <div className="mt-6 rounded-3xl border border-dashed border-slate-200 bg-slate-50 px-6 py-8 text-center text-sm text-slate-500">
-                            Ainda nao ha categorias vinculadas aos seus eventos.
+                            Ainda não há categorias vinculadas aos seus eventos.
                         </div>
                     ) : (
                         <>
@@ -602,7 +602,7 @@ export default function OrganizadorDashboardPage() {
                                     Cidades vinculadas
                                 </p>
                                 <h2 className="mt-1 text-2xl font-bold text-slate-900">
-                                    Presenca por cidade
+                                    Presença por cidade
                                 </h2>
                             </div>
                         </div>
@@ -664,7 +664,7 @@ export default function OrganizadorDashboardPage() {
                                     Pontos de venda vinculados
                                 </p>
                                 <h2 className="mt-1 text-2xl font-bold text-slate-900">
-                                    Distribuicao por ponto
+                                    Distribuição por ponto
                                 </h2>
                             </div>
                         </div>
@@ -679,7 +679,7 @@ export default function OrganizadorDashboardPage() {
 
                     {dashboard.pontosVenda.length === 0 ? (
                         <div className="mt-6 rounded-3xl border border-dashed border-slate-200 bg-slate-50 px-6 py-8 text-center text-sm text-slate-500">
-                            Nenhum ponto de venda esta associado aos seus eventos.
+                            Nenhum ponto de venda está associado aos seus eventos.
                         </div>
                     ) : (
                         <>
@@ -717,7 +717,7 @@ export default function OrganizadorDashboardPage() {
                                             ) : null}
                                         </div>
                                         <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-emerald-700 shadow-sm">
-                                            {ponto.eventos.length} vinculo(s)
+                                            {ponto.eventos.length} vínculo(s)
                                         </span>
                                     </div>
                                 ))}

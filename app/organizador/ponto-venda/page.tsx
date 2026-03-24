@@ -27,7 +27,7 @@ async function deletarPontoVenda(id: string) {
   );
 
   if (!response) {
-    console.error("Falha na exclusao do ponto de venda");
+    console.error("Falha na exclusão do ponto de venda");
     return [];
   }
 
@@ -38,6 +38,12 @@ async function deletar(formData: FormData) {
   'use server';
 
   const id = formData.get("id");
+
+  if (typeof id !== "string" || !id) {
+    console.error("Id do ponto de venda não informado para exclusão");
+    return;
+  }
+
   await deletarPontoVenda(id);
 
   revalidatePath("/organizador/ponto-venda");
