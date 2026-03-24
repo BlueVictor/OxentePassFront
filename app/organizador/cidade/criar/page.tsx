@@ -8,50 +8,16 @@ import { useToast } from "@/app/_components/ToastProvider";
 import { useEffect, useState } from "react";
 import "../../../globals.css";
 
-async function getCategorias() {
-	const response = await chamadaAPI(
-		`/tag`, "GET" 
-	)
-		
-	if (!response) {
-		console.error("Falha na obtenção das categorias")
-		return
-	}
-		
-	return response.content
-}
-
-async function addCategExistente (idCidade: string, categ: string) {
-	const response = await chamadaAPI(
-		`/cidade/${idCidade}/addTag/${categ}`, "PATCH"
-	)
-	
-	if (!response) {
-		console.error("Falha na adição da categoria " + categ)
-		return
-	}
-}
-
-async function addCategNova (idCidade: string, categ: string) {
-	const response = await chamadaAPI(
-		`/cidade/${idCidade}/addTag`, "PATCH", {tag: categ}
-	)
-	
-	if (!response) {
-		console.error("Falha na adição da categoria " + categ)
-		return
-	}
-}
-
 export default function criar () {
 	const { showToast } = useToast();
-	const [categorias, setCategorias] = useState<any[]>([]);
+	const [categorias, setCategorias] = useState<any[]>([]);				//todas as categorias
+
 	const [formData, setFormData] = useState({
 		nome: "",
 		descricao: ""
 	});
-	const [selecionadas, setSelecionadas] = useState<number[]>([]);
-  const [novas, setNovas] = useState<string[]>([]);
+	const [selecionadas, setSelecionadas] = useState<number[]>([]); //categorias pós-modificação
+  const [novas, setNovas] = useState<string[]>([]);								//categorias novas (criadas no input de texto)
 
 	const criarCidade = async () => {
 		// Criação da cidade
@@ -75,17 +41,62 @@ export default function criar () {
 
 		// Adição de categorias
 		selecionadas.forEach(async tag => {
-			console.log("selec tag: " + tag)
 			await addCategExistente(cidade.data.id, tag.toString())
 		});
 
 		novas.forEach(async tag => {
-			console.log("nova tag: " + tag)
 			await addCategNova(cidade.data.id, tag.toString())
 		});
 
 		showToast("Cidade criada!", "success")
 		redirect ("/organizador/cidade") 
+	}
+
+	const getCategorias = async () => {
+		const response = await chamadaAPI(
+			`/tag`, "GET", {}, {
+        returnMeta: true,
+        silenciarErro: false,
+      }
+		)
+		
+		if (!response.ok) {
+			console.error("Falha na obtenção das categorias")
+			showToast(String(response.data.mensagem), "error")
+			return
+		}
+			
+		return response.data.content
+	}
+
+	const addCategExistente = async (idCidade: string, categ: string) => {
+		const response = await chamadaAPI(
+			`/cidade/${idCidade}/addTag/${categ}`, "PATCH", {}, {
+        returnMeta: true,
+        silenciarErro: false,
+      }
+		)
+		
+		if (!response.ok) {
+			console.error("Falha na adição da categoria " + categ)
+			showToast(String(response.data.mensagem), "error")
+			return
+		}
+	}
+
+	const addCategNova = async (idCidade: string, categ: string) => {
+		const response = await chamadaAPI(
+			`/cidade/${idCidade}/addTag`, "PATCH", {tag: categ}, {
+        returnMeta: true,
+        silenciarErro: false,
+      }
+		)
+		
+		if (!response.ok) {
+			console.error("Falha na adição da categoria " + categ)
+			showToast(String(response.data.mensagem), "error")
+			return
+		}
 	}
 
 	useEffect(() => {

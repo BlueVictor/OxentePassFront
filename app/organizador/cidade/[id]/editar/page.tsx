@@ -1,123 +1,172 @@
-
+'use client'
 import { chamadaAPI } from "../../../../../backend/chamadaPadrao";
 import { redirect } from "next/navigation";
 import Form from "@/app/_components/Form";
 import CategoriaSelector from "@/app/_components/Organizador/CategoriaSelector";
+import { useEffect, useState } from "react";
+import { useToast } from "@/app/_components/ToastProvider";
 import "../../../../globals.css";
 
-var idCidade : string
-var categCidade: any[] = []
+export default function editar (props: any) {
+  const { showToast } = useToast();
+  const [idCidade, setIdCidade] = useState<any>();
+  const [categorias, setCategorias] = useState<any[]>([]);        //todas as categorias
+  const [cidadeCateg, setCidadeCateg] = useState<any[]>([]);      //categorias previamente selecionadas
 
-async function editarCidade (formData: FormData) {
-  'use server'
+  const [formData, setFormData] = useState({
+    nome: "",
+    descricao: ""
+  });
+  const [selecionadas, setSelecionadas] = useState<number[]>([]); //categorias pós-modificação
+  const [novas, setNovas] = useState<string[]>([]);               //categorias novas (criadas no input de texto)
 
-  // Edição da cidade
-	const data = {
-		nome: formData.get("nome"),
-		descricao: formData.get("descricao")
-	}
-
-  const response = await chamadaAPI(
-    `/cidade/${idCidade}`, "PUT", data
-  )
-  
-  if (!response) {
-    console.error("Falha na edição de cidade")
-    return
-  }
-
-  // Adição e remoção de categorias
-	const tagsExistentes = [...new Set(formData.getAll('tagsExistentes').map(Number))]
-  const tagsNovas = formData.getAll('tagsNovas')
-
-  console.log("tagsExistentes: " + tagsExistentes)
-  console.log("tagsNovas: " + tagsNovas)
-  
-	tagsExistentes.forEach(async tag => {
-    if (!categCidade.some(tagCidade => Number(tag) === tagCidade.id)) {
-      await addCategExistente(idCidade, tag.toString())
+  const editarCidade = async () => {
+    // Edição da cidade
+    const data = {
+      nome: formData.nome,
+      descricao: formData.descricao
     }
-	});
 
-  categCidade.forEach(async tagCidade => {
-    if (!tagsExistentes.some(tag => Number(tag) === tagCidade.id)) {
-      await delCategExistente(idCidade, tagCidade.id.toString())
+    const cidade = await chamadaAPI(
+      `/cidade/${idCidade}`, "PUT", data, {
+        returnMeta: true,
+        silenciarErro: false,
+      }
+    )
+    
+    if (!cidade.ok) {
+      console.error("Falha na edição de cidade")
+      showToast(String(cidade.data.mensagem), "error")
+      return
     }
-	});
 
-	tagsNovas.forEach(async tag => {
-		await addCategNova(idCidade, tag.toString())
-	});
-  
-  redirect ("/organizador/cidade") 
-}
+    // Adição e remoção de categorias
+    selecionadas.forEach(async tag => {
+      if (!cidadeCateg.includes(Number(tag))) {
+        await addCategExistente(idCidade, tag.toString())
+      }
+    });
 
-async function addCategExistente (idCidade: string, categ: string) {
-	const response = await chamadaAPI(
-		`/cidade/${idCidade}/addTag/${categ}`, "PATCH"
-	)
-	
-	if (!response) {
-		console.error("Falha na adição da categoria " + categ)
-		return
-	}
-}
+    cidadeCateg.forEach(async tagCidade => {
+      if (!selecionadas.includes(Number(tagCidade))) {
+        await delCategExistente(idCidade, tagCidade.toString())
+      }
+    });
 
-async function delCategExistente (idCidade: string, categ: string) {
-	const response = await chamadaAPI(
-		`/cidade/${idCidade}/removerTag/${categ}`, "PATCH"
-	)
-	
-	if (!response) {
-		console.error("Falha na remoção da categoria " + categ)
-		return
-	}
-}
+    novas.forEach(async tag => {
+      await addCategNova(idCidade, tag.toString())
+    });
 
-async function addCategNova (idCidade: string, categ: string) {
-	const response = await chamadaAPI(
-		`/cidade/${idCidade}/addTag`, "PATCH", {tag: categ}
-	)
-	
-	if (!response) {
-		console.error("Falha na adição da categoria " + categ)
-		return
-	}
-}
-
-async function getCidade () {
-  const response = await chamadaAPI(
-    `/cidade/filtro?id=${idCidade}`, 
-    "GET", 
-  )
-  
-  if (!response) {
-    console.error("Falha na obtenção de cidade")
-    return
+    showToast("Cidade editada!", "success")
+    redirect ("/organizador/cidade") 
   }
-  
-  return response.content
-}
 
-async function getCategorias () {
-  const response = await chamadaAPI(
-    `/tag`, 
-    "GET" 
-  )
-  
-  if (!response) {
-    console.error("Falha na obtenção das categorias")
-    return
+  const getCidade = async (id: any) => {
+    const response = await chamadaAPI(
+      `/cidade/filtro?id=${id}`, "GET", {}, {
+        returnMeta: true,
+        silenciarErro: false,
+      } 
+    )
+    
+    if (!response.ok) {
+      console.error("Falha na obtenção de cidade")
+      showToast(String(response.data.mensagem), "error")
+      return
+    }
+    
+    return response.data.content[0]
   }
-  
-  return response.content
-}
 
-export default async function editar ({ params }: { params: { id: string } }) {
-  idCidade = (await params).id
-  const cidade = (await getCidade())[0]
-  const categorias = await getCategorias()
-  categCidade = cidade.tags
+  const getCategorias = async () => {
+    const response = await chamadaAPI(
+      `/tag`, "GET", {}, {
+        returnMeta: true,
+        silenciarErro: false,
+      }
+    )
+    
+    if (!response.ok) {
+      console.error("Falha na obtenção das categorias")
+      showToast(String(response.data.mensagem), "error")
+      return
+    }
+      
+    return response.data.content
+  }
+
+  const addCategExistente = async (idCidade: string, categ: string) => {
+    const response = await chamadaAPI(
+      `/cidade/${idCidade}/addTag/${categ}`, "PATCH", {}, {
+        returnMeta: true,
+        silenciarErro: false,
+      }
+    )
+    
+    if (!response.ok) {
+      console.error("Falha na adição da categoria " + categ)
+      showToast(String(response.data.mensagem), "error")
+      return
+    }
+  }
+
+  const delCategExistente = async (idCidade: string, categ: string) => {
+    const response = await chamadaAPI(
+      `/cidade/${idCidade}/removerTag/${categ}`, "PATCH", {}, {
+        returnMeta: true,
+        silenciarErro: false,
+      }
+    )
+    
+    if (!response.ok) {
+      console.error("Falha na remoção da categoria " + categ)
+      showToast(String(response.data.mensagem), "error")
+      return
+    }
+  }
+
+  const addCategNova = async (idCidade: string, categ: string) => {
+    const response = await chamadaAPI(
+      `/cidade/${idCidade}/addTag`, "PATCH", {tag: categ}, {
+        returnMeta: true,
+        silenciarErro: false,
+      }
+    )
+    
+    if (!response.ok) {
+      console.error("Falha na adição da categoria " + categ)
+      showToast(String(response.data.mensagem), "error")
+      return
+    }
+  }
+
+  useEffect(() => {
+    async function carregar() {
+      const id = (await props.params).id
+      if (id) setIdCidade(id);
+
+      const cidade = await getCidade(id)
+      if(cidade) {
+        setFormData({nome: cidade.nome, descricao: cidade.descricao})
+        setSelecionadas(cidade.tags.map((tag: any) => tag.id))
+        setCidadeCateg(cidade.tags.map((tag: any) => tag.id))
+      } 
+
+      const tags = await getCategorias();
+      if (tags) setCategorias(tags);
+    }
+
+    carregar();
+  }, []);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value
+    }));
+  };
 
   return (
     <div className="flex flex-row justify-center">
@@ -137,8 +186,10 @@ export default async function editar ({ params }: { params: { id: string } }) {
               type="text" 
               name="nome" 
               id="nome" 
-              className="border border-slate-200 rounded-xl p-2" 
-              defaultValue={cidade.nome}
+              value={formData.nome}
+              onChange={handleChange}
+              placeholder="Nome" 
+              className="border border-slate-200 rounded-xl p-2"
               required 
             />
 
@@ -146,19 +197,24 @@ export default async function editar ({ params }: { params: { id: string } }) {
             <textarea 
               name="descricao" 
               id="descricao" 
+              value={formData.descricao}
+              onChange={handleChange}
               rows={4} 
-              defaultValue={cidade.descricao}
-              className="border border-slate-200 rounded-xl p-2" 
+              className="border border-slate-200 rounded-xl p-2"
               required 
             />
-
-            <CategoriaSelector 
-              tagsExistentes={categorias}
-              tagsSelecionadasInit={cidade.tags}
-            />
           </div>
+
+          <CategoriaSelector 
+            tagsExistentes={categorias}
+            selecionadas={selecionadas}
+            setSelecionadas={setSelecionadas}
+            novas={novas}
+            setNovas={setNovas}
+          />
         </Form>
       </main>
     </div>
   );
 }
+

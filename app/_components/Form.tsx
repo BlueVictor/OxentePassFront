@@ -14,7 +14,7 @@ type FormProps = {
 export default function Form({
     title,
     action,
-    method = "POST",
+    method,
     children,
     buttons,
     footer,
