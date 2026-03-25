@@ -1,25 +1,35 @@
 'use client'
 
-import { useAuth } from "../_components/Auth/AuthProvider";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "../_components/Auth/AuthProvider";
 import { useToast } from "../_components/ToastProvider";
-import { redirect } from "next/navigation";
 
 export default function OrganizadorLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const router = useRouter();
   const { showToast } = useToast();
-  const { autenticado, organizador } = useAuth();
+  const { autenticado, organizador, loading } = useAuth();
 
   useEffect(() => {
-    if(!autenticado) {
-      showToast("Você precisa estar logado como organizador para acessar essa página!", "info")
-      redirect("/login")
-    }
-    else if(!organizador) {
-      showToast("Você precisa ser um organizador para acessar essa página!", "info")
-      redirect("/")
+    if (loading) {
+      return;
     }
 
-  }, [showToast, autenticado, organizador])
+    if (!autenticado) {
+      showToast("Você precisa estar logado como organizador para acessar essa página!", "info");
+      router.replace("/login");
+      return;
+    }
+
+    if (!organizador) {
+      showToast("Você precisa ser um organizador para acessar essa página!", "info");
+      router.replace("/");
+    }
+  }, [showToast, autenticado, organizador, loading, router]);
+
+  if (loading || !autenticado || !organizador) {
+    return null;
+  }
 
   return (
     <>
