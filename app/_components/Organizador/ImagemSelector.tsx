@@ -1,9 +1,13 @@
 'use client';
 
+import { getS3URL } from '@/funcoes/helpers';
 import { useState } from 'react';
 
 type Imagem = {
+  id: number,
+  S3: string,
   file: File,
+  nome: string,
   capa: boolean
 }
 
@@ -22,7 +26,7 @@ export default function ImagemSelector({ imagens, setImagens }: any) {
         novas = novas.map(img => ({...img, capa: false}))
       }
 
-      return [...novas, { file: imagemAtual, capa: capa }]
+      return [...novas, { id: null, S3: null, file: imagemAtual, nome: imagemAtual.name, capa: capa }]
     })
 
     setImagemAtual(null)
@@ -138,14 +142,14 @@ export default function ImagemSelector({ imagens, setImagens }: any) {
             >
               {/* Preview */}
               <img
-                src={URL.createObjectURL(img.file)}
+                src={img.S3 == null ? URL.createObjectURL(img.file) : getS3URL(img.S3)}
                 alt="preview"
                 className="w-15 h-15 object-cover rounded"
               />
 
               {/* Info */}
               <div className="flex flex-col">
-                <span>{img.file.name}</span>
+                <span>{img.nome}</span>
 
                 {img.capa && (
                   <span className="text-green-600 text-sm">

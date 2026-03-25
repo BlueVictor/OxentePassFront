@@ -1,6 +1,6 @@
 'use client'
-import { chamadaAPI } from "../../../../backend/chamadaPadrao";
-import { criarImagem } from "../../../../backend/chamadasImagem";
+import { chamadaAPI } from "../../../../../backend/chamadaPadrao";
+import { criarImagem } from "../../../../../backend/chamadasImagem";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 import Form from "@/app/_components/Form";
@@ -10,8 +10,8 @@ import CategoriaSelector from "@/app/_components/Organizador/CategoriaSelector";
 import PontoVendaSelector from "@/app/_components/Organizador/PontoVendaSelector";
 import IngressoSelector from "@/app/_components/Organizador/IngressoSelector";
 import ImagemSelector from "@/app/_components/Organizador/ImagemSelector";
-import "../../../globals.css";
-import "./page.css"
+import "../../../../globals.css";
+import "../../criar/page.css"
 
 type Ingresso = {
   tipoIngresso: string,
@@ -34,17 +34,23 @@ function formatarData(data: string): string {
   return data.replace("T", " ") + ":00"
 }
 
-export default function criar () {
+const formatarDataInput = (data: string) => {
+  return data.slice(0, 16)
+}
+
+export default function editar (props: any) {
   const { usuario } = useAuth();
   const { showToast } = useToast();
+  const [idEvento, setIdEvento] = useState<any>();                      //id da URL
+  const [evento, setEvento] = useState<any>();                          //evento
   const [categorias, setCategorias] = useState<any[]>([]);				      //todas as categorias
   const [cidades, setCidades] = useState<any[]>([]);				            //todas as cidades
   const [pontoVendas, setPontoVendas] = useState<any[]>([]);            //todos os pontos de venda
+  const [imgEvento, setImgEvento] = useState<any[]>([]);                //todas as imagens do evento
   
   const [formData, setFormData] = useState({
     nome: "",
     descricao: "",
-    tipo: "simples",
     cidade: '',
     cep: '',
     bairro: '',
@@ -62,8 +68,8 @@ export default function criar () {
   const [ingressos, setIngressos] = useState<Ingresso[]>([]);                         //ingressos inseridos
   const [imagens, setImagens] = useState<Imagem[]>([]);                               //imagens inseridas
   
-  const criarEvento = async () => {
-    // Criação do evento
+  const editarEvento = async () => {
+    // Edição do evento
     const data = {
       nome: formData.nome,
       descricao: formData.descricao,
@@ -83,14 +89,14 @@ export default function criar () {
     }
 
     const evento = await chamadaAPI(
-      `/evento/${formData.tipo}`, "POST", data, {
+      `/evento/${idEvento}`, "PUT", data, {
         returnMeta: true,
         silenciarErro: false,
       }
     )
     
     if (!evento.ok) {
-      console.error("Falha na criação do evento")
+      console.error("Falha na edição do evento")
       showToast(String(evento.data.mensagem), "error")
       return
     }
@@ -201,6 +207,23 @@ export default function criar () {
     }
   }
 
+  const getEvento = async (id: any) => {
+    const response = await chamadaAPI(
+      `/evento/filtro?id=${id}`, "GET", {}, {
+        returnMeta: true,
+        silenciarErro: false,
+      }
+    )
+
+    if (!response.ok) {
+      console.error("Falha na obtenção do evento")
+      showToast(String(response.data.mensagem), "error")
+      return
+    }
+        
+    return response.data.content[0]
+  }
+
   const getCategorias = async () => {
     const response = await chamadaAPI(
     `/tag`, "GET", {}, {
@@ -252,23 +275,87 @@ export default function criar () {
     return response.data.content
   }
 
+  async function getImagensEvento (idEvento: string) {
+    const response = await chamadaAPI(
+      `/evento/${idEvento}/imagens`,
+      "GET"
+    )
+
+    if (!response) {
+      console.error("Falha no carregamento das imagens")
+      return []
+    }
+
+    return response.content
+  }
+
   useEffect(() => {
     async function carregar() {
+      // Carregando itens
+      const id = (await props.params).id
+      if (id) setIdEvento(id);
+
+      const eventoBusca = await getEvento(id);
+      if (eventoBusca) setEvento(eventoBusca);
+
       const tags = await getCategorias();
       if (tags) setCategorias(tags);
 
       const cidades = await getCidades();
-      if (cidades) {
-        setCidades(cidades);
-
-        setFormData((prev) => ({
-          ...prev,
-          cidade: cidades[0].id
-        }));
-      } 
+      if (cidades) setCidades(cidades);
 
       const pontoVendas = await getPontoVendas();
       if (pontoVendas) setPontoVendas(pontoVendas);
+
+      const imgsEvento = await getImagensEvento(id);
+      if (imgsEvento) setImgEvento(imgsEvento);
+
+      // Settando states
+      setFormData({
+        nome: eventoBusca.nome,
+        descricao: eventoBusca.descricao,
+        cidade: eventoBusca.cidade.id,
+        cep: eventoBusca.endereco.cep,
+        bairro: eventoBusca.endereco.bairro,
+        rua: eventoBusca.endereco.rua,
+        numero: eventoBusca.endereco.numero,
+        dataHoraInicio: formatarDataInput(eventoBusca.dataHoraInicio),
+        dataHoraFim: formatarDataInput(eventoBusca.dataHoraFim),
+        classificacao: eventoBusca.classificacao,
+        email: eventoBusca.emailContato,
+        telefone: eventoBusca.telefoneContato
+      })
+
+      if (eventoBusca.tags.length > 0){
+        setTagSelecionadas(eventoBusca.tags.map((tag: any) => tag.id)) 
+      }
+
+      if (eventoBusca.ingressos.length > 0) {
+        setIngressos(eventoBusca.ingressos.map((ing: any) => {
+          return {
+            tipoIngresso: ing.tipo,
+            valorBase: ing.valorBase,
+            quantidadeDisponivel: ing.quantidadeDisponivel,
+            temMeiaEntrada: ing.temMeiaEntrada
+          };
+        }))
+      }
+
+      if (eventoBusca.pontosVenda.length > 0) {
+        setPontoVendaSelecionados(eventoBusca.pontosVenda.map((ponto: any) => ponto.id))
+      }
+
+      if (imgsEvento.length > 0) {
+        setImagens(imgsEvento.map((img: any) => {
+          return {
+            id: img.id,
+            S3: img.chaveS3,
+            file: null,
+            nome: img.nome,
+            capa: img.ehCapa
+          };
+        }))
+      }
     }
   
     carregar();
@@ -287,11 +374,11 @@ export default function criar () {
     <div className="flex flex-row justify-center">
       <main className="w-3/5">
         <Form
-          title="Criar Evento"
-          action={criarEvento}
+          title="Editar Evento"
+          action={editarEvento}
           buttons={
             <>
-              <button type="submit" className="botao-primario">Criar Evento</button>
+              <button type="submit" className="botao-primario">Editar Evento</button>
             </>
           }
         >
@@ -319,29 +406,6 @@ export default function criar () {
               required 
             />
             
-            <label>Haverão sub-eventos vinculados a este evento? <b className="text-red-500">*</b></label>
-            <div className="flex flex-row gap-2">
-              <input 
-                type="radio" 
-                name="tipo" 
-                id="simples"
-                value="simples"
-                checked={formData.tipo === "simples"}
-                onChange={handleChange}
-              /> 
-              <div className="mr-4">Não</div>
-
-              <input 
-                type="radio" 
-                name="tipo" 
-                id="composto"
-                value="composto"
-                checked={formData.tipo === "composto"}
-                onChange={handleChange}
-              /> 
-              <div>Sim</div>
-            </div>
-
             <h1 className="mt-1.5">Endereço <b className="text-red-500">*</b></h1>
             <div className="flex flex-col gap-4 border border-slate-200 rounded-xl p-3">
               <div className="flex flex-col gap-2">
