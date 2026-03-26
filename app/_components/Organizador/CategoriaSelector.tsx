@@ -2,15 +2,16 @@
 
 import { useState } from 'react';
 
-export default function CategoriaSelector({ tagsExistentes, selecionadas, setSelecionadas, novas, setNovas}: any) {
+export default function CategoriaSelector({ tagsExistentes = [] }: any) {
+  const [selecionadas, setSelecionadas] = useState<any[]>([]);
+  const [novas, setNovas] = useState<string[]>([]);
   const [input, setInput] = useState('');
 
   const selecionarTag = (tag: any) => {
     setSelecionadas((prev: any) => {
       if (prev.includes(tag.id)) {
         return prev.filter((id: any) => id !== tag.id);
-      } 
-      else {
+      } else {
         return [...prev, tag.id];
       }
     });
@@ -21,8 +22,8 @@ export default function CategoriaSelector({ tagsExistentes, selecionadas, setSel
     if (!valor) return;
 
     const jaExiste =
-      tagsExistentes.some((tag: any) => tag.tag.toLowerCase() === valor.toLowerCase()) || // evita duplicação na lista que vem do banco
-      novas.some((n: any) => n.toLowerCase() === valor.toLowerCase());                    // evita duplicação na lista de novas
+      tagsExistentes.some((tag: any) => tag.tag.toLowerCase() === valor.toLowerCase()) || 
+      novas.some((n: any) => n.toLowerCase() === valor.toLowerCase());                    
 
     setNovas((prev: string[]) => {
       if (jaExiste) return prev;              
@@ -38,20 +39,25 @@ export default function CategoriaSelector({ tagsExistentes, selecionadas, setSel
 
   return (
     <div>
+      {selecionadas.map(id => (
+        <input key={`existente-${id}`} type="hidden" name="tagsExistentes" value={id} />
+      ))}
+      
+      {novas.map(tagNova => (
+        <input key={`nova-${tagNova}`} type="hidden" name="tagsNovas" value={tagNova} />
+      ))}
+
       <h1 className="mt-1 mb-1.5">Gerir Categorias</h1>
       <div className="space-y-3 border border-slate-200 rounded-xl p-3">
-        {/* Subtitulos */}
         <div className='flex flex-row gap-5'>
           <h2 className='w-1/2'>Selecione categorias existentes</h2>
           <h2></h2>
           <h2 className='w-1/2'>Crie uma nova categoria</h2>
         </div>
 
-        {/* Seleção de Categorias */}
         <div className='flex flex-row gap-5'>
-          {/* TAGS EXISTENTES */}
           <div className="flex flex-wrap gap-3 w-1/2">
-            {tagsExistentes.map((tag: any) => {
+            {tagsExistentes?.map((tag: any) => {
               const ativa = selecionadas.includes(tag.id);
 
               return (
@@ -72,7 +78,6 @@ export default function CategoriaSelector({ tagsExistentes, selecionadas, setSel
           <div className="border border-slate-200"></div>
 
           <div className="flex flex-col gap-3 w-1/2">
-            {/* NOVAS TAGS */}
             <div className="flex gap-2">
               <input
                 value={input}
@@ -89,9 +94,8 @@ export default function CategoriaSelector({ tagsExistentes, selecionadas, setSel
                 Adicionar
               </button>
             </div>
-            {/* LISTA DE NOVAS */}
             <div className="flex gap-2 flex-wrap">
-              {novas.map((tag: any, i: any) => (
+              {novas?.map((tag: string, i: number) => (
                 <button
                   type="button"
                   key={i}

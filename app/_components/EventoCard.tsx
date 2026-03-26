@@ -29,7 +29,7 @@ export function EventoCard({ item }: EventoCardProps) {
               De {converterData(item.dataHoraInicio)} à {converterData(item.dataHoraFim)}
             </div>
             <div>
-              {item.cidade.nome}
+              {item.cidade?.nome}
             </div>
           </div>
         </div>

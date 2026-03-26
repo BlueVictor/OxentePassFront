@@ -14,7 +14,6 @@ type FormProps = {
 export default function Form({
     title,
     action,
-    method = "POST",
     children,
     buttons,
     footer,
@@ -31,7 +30,6 @@ export default function Form({
             <div className="relative z-10 p-6 sm:p-8">
                 <form
                     action={action}
-                    method={method}
                     className="space-y-5"
                 >
                     {children}

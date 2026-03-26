@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { ChevronDown, User, LogIn, UserPlus, UserCircle, LogOut } from "lucide-react";
+import { ChevronDown, User, LogIn, UserPlus, UserCircle, LogOut, Ticket } from "lucide-react"; 
 import { useRouter } from "next/navigation";
 
 interface ProfileDropdownItem {
@@ -35,13 +35,14 @@ export function ProfileDropdownButton({
 
   const label = autenticado && nomeUsuario?.trim() ? nomeUsuario : "Perfil";
 
-  // Parte modificável aqui
-  const items: ProfileDropdownItem[] =
-    autenticado ? [
-      { title: "Meu perfil", icon: <UserCircle />, onClick: () => router.push("/usuario/me") },
-      { title: "Sair", icon: <LogOut />, onClick: onSair, separate: true, danger: true },
-    ]
-      : [
+  //Local de adição de novas funcionalidades no dropdown
+  const items: ProfileDropdownItem[] = autenticado 
+    ? [
+        { title: "Meu perfil", icon: <UserCircle />, onClick: () => router.push("/usuario/me") },
+        { title: "Meus Ingressos", icon: <Ticket />, onClick: () => router.push("/meus-ingressos") },
+        { title: "Sair", icon: <LogOut />, onClick: onSair, separate: true, danger: true },
+      ]
+    : [
         { title: "Login", icon: <LogIn />, onClick: () => router.push("/login") },
         { title: "Cadastro", icon: <UserPlus />, onClick: () => router.push("/cadastro") },
       ];

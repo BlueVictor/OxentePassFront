@@ -1,7 +1,7 @@
 'use client'
 
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
-import { X } from "lucide-react";
+import { X, CheckCircle2, AlertCircle, Info } from "lucide-react";
 
 type ToastType = "error" | "success" | "info";
 
@@ -34,23 +34,36 @@ function Toast({
         const frame = requestAnimationFrame(() => {
             setEntered(true);
         });
-
         return () => cancelAnimationFrame(frame);
     }, []);
 
     const estilos = {
-        error: "border-red-200 bg-red-50 text-red-700",
-        success: "border-emerald-200 bg-emerald-50 text-emerald-700",
-        info: "border-sky-200 bg-sky-50 text-sky-700",
+        error: "border-red-500/20 bg-red-500/90 text-white shadow-red-200/50",
+        success: "border-emerald-500/20 bg-emerald-600/90 text-white shadow-emerald-200/50",
+        info: "border-sky-500/20 bg-sky-600/90 text-white shadow-sky-200/50",
+    };
+
+    const icones = {
+        error: <AlertCircle size={18} />,
+        success: <CheckCircle2 size={18} />,
+        info: <Info size={18} />,
     };
 
     const animacao = entered && !closing
-        ? "translate-y-0 opacity-100"
-        : "translate-y-2 opacity-0";
+        ? "translate-y-0 opacity-100 scale-100"
+        : "-translate-y-4 opacity-0 scale-95";
 
     return (
-        <div className={`pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-2xl border px-4 py-3 shadow-lg transition-all duration-200 ease-out ${estilos[type]} ${animacao}`}>
-            <div className="flex-1 text-sm font-medium leading-6">
+        <div className={`
+            pointer-events-auto flex items-center gap-4 rounded-[1.5rem] border px-6 py-4 
+            shadow-2xl backdrop-blur-md transition-all duration-300 ease-out
+            ${estilos[type]} ${animacao}
+        `}>
+            <div className="shrink-0">
+                {icones[type]}
+            </div>
+
+            <div className="flex-1 text-[11px] font-black uppercase tracking-[0.1em] leading-tight">
                 {message}
             </div>
 
@@ -58,9 +71,9 @@ function Toast({
                 type="button"
                 onClick={onClose}
                 aria-label="Fechar notificacao"
-                className="cursor-pointer text-xs font-semibold uppercase tracking-wide opacity-70 transition hover:opacity-100"
+                className="cursor-pointer p-1 rounded-full hover:bg-white/20 transition-colors"
             >
-                <X size={16} />
+                <X size={16} strokeWidth={3} />
             </button>
         </div>
     );
@@ -75,38 +88,24 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const limparTimers = useCallback(() => {
-        if (timeoutRef.current) {
-            clearTimeout(timeoutRef.current);
-            timeoutRef.current = null;
-        }
-
-        if (closeTimeoutRef.current) {
-            clearTimeout(closeTimeoutRef.current);
-            closeTimeoutRef.current = null;
-        }
+        if (timeoutRef.current) { clearTimeout(timeoutRef.current); timeoutRef.current = null; }
+        if (closeTimeoutRef.current) { clearTimeout(closeTimeoutRef.current); closeTimeoutRef.current = null; }
     }, []);
 
     const hideToast = useCallback(() => {
         limparTimers();
         setClosing(true);
-
         closeTimeoutRef.current = setTimeout(() => {
             setToast(null);
             setClosing(false);
             closeTimeoutRef.current = null;
-        }, 200);
+        }, 300);
     }, [limparTimers]);
 
     const showToast = useCallback((message: string, type: ToastType = "info") => {
         limparTimers();
         setClosing(false);
-
-        setToast({
-            id: Date.now(),
-            message,
-            type,
-        });
-
+        setToast({ id: Date.now(), message, type });
         timeoutRef.current = setTimeout(() => {
             hideToast();
         }, 4000);
@@ -116,7 +115,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
         <ToastContext.Provider value={{ toast, showToast, hideToast }}>
             {children}
 
-            <div className="pointer-events-none fixed right-4 top-20 z-50 w-full max-w-sm">
+            <div className="pointer-events-none fixed left-0 right-0 top-10 z-[9999] flex justify-center px-4">
                 {toast ? (
                     <Toast
                         key={toast.id}
@@ -133,10 +132,6 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
 
 export function useToast() {
     const context = useContext(ToastContext);
-
-    if (!context) {
-        throw new Error("useToast deve ser usado dentro de ToastProvider.");
-    }
-
+    if (!context) throw new Error("useToast deve ser usado dentro de ToastProvider.");
     return context;
 }
