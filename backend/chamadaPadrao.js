@@ -4,14 +4,26 @@ export async function chamadaAPI(rota, metodo, body = {}, options = {}) {
         silenciarErro = false,
     } = options;
 
+    const headers = {
+        "Content-Type": "application/json"
+    };
+
+    if (typeof window === "undefined") {
+        try {
+            const { cookies } = await import("next/headers"); 
+            const cookieStore = await cookies(); 
+            headers["Cookie"] = cookieStore.toString();
+        } catch (e) {
+            console.warn("Não foi possível carregar cookies no servidor.", e);
+        }
+    }
+
     try {
         const apiResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}${rota}`, {
             credentials: "include",
-            headers: {
-                "Content-Type": "application/json"
-            },
+            headers: headers, 
             method: metodo,
-            body: metodo !== "GET" ? JSON.stringify(body) : undefined
+            body: (metodo !== "GET" && metodo !== "DELETE") ? JSON.stringify(body) : undefined
         });
 
         const text = await apiResponse.text();
@@ -21,11 +33,9 @@ export async function chamadaAPI(rota, metodo, body = {}, options = {}) {
         }
 
         let data;
-
         try {
             data = JSON.parse(text);
-        }
-        catch {
+        } catch {
             data = text;
         }
 

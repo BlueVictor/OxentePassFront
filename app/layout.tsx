@@ -27,22 +27,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-br">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap" rel="stylesheet" />
-      </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-50 h-screen overflow-hidden flex flex-col`}
       >
         <AuthProvider>
           <ToastProvider>
-            <header>
-              <Navbar />
-            </header>
-            <main className="main-container">
-              {children}
+            <Navbar />
+            
+            <main className="flex-1 w-full overflow-y-auto relative bg-slate-50">
+              <div className="p-8 w-full max-w-[2500px] mx-auto min-h-full">
+                {children}
+              </div>
             </main>
+            
           </ToastProvider>
         </AuthProvider>
       </body>
