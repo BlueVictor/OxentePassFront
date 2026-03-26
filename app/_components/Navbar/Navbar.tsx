@@ -33,12 +33,21 @@ export default function Navbar() {
 
             {/* Links Navbar */}
             <ul className="flex items-center gap-6">
-                <Link
-                    href="/"
-                    className="text-xl mr-4 cursor-pointer"
-                >
-                    OxentePass
-                </Link>
+                {/* Logo */}
+                <li className="">
+                    <Link
+                        href="/"
+                        className="text-xl mr-4 cursor-pointer flex items-center gap-2"
+                    >
+                        <div>
+                            <img src="logo.svg" alt="logo" width={50} />
+                        </div>
+                        <div>
+                            <span className="font-bold text-yellow-300">Oxente</span>
+                            <span className="font-semibold">Pass</span>
+                        </div>
+                    </Link>
+                </li>
 
                 {
                     links.map(
@@ -68,6 +77,6 @@ export default function Navbar() {
                     />
             }
 
-        </nav>
+        </nav >
     );
 }

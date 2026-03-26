@@ -88,7 +88,7 @@ export default function LoginPage() {
             href="/cadastro"
             className="text-blue-600 transition hover:text-blue-800"
           >
-            Nao tem uma conta? Realize seu cadastro agora!
+            Não tem uma conta? Realize seu cadastro agora!
           </Link>
         }
       >
