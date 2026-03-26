@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react';
+import { ClipboardList } from "lucide-react";
 import { chamadaAPI } from "../../../backend/chamadaPadrao";
 import { LayoutGeral } from "../../_components/LayoutGeral";
 import { HeaderInterno } from "../../_components/HeaderInterno";
@@ -21,7 +22,7 @@ export default function ListarVendas() {
   const carregarVendas = async () => {
     setCarregando(true);
     try {
-      const response = await chamadaAPI("/venda/listar?page=0&size=50", "GET");
+      const response = await chamadaAPI(`/venda/listar?page=0&size=50&_t=${new Date().getTime()}`, "GET");
       if (response && response.content) setVendas(response.content);
       else if (Array.isArray(response)) setVendas(response);
     } catch (error) { mostrarToast("Erro de conexão ao carregar as vendas.", "erro"); } 
@@ -76,7 +77,7 @@ export default function ListarVendas() {
   };
 
   return (
-    <LayoutGeral voltarLink="/vendas">
+    <LayoutGeral voltarLink="/vendas" scroll>
       
       {toast.visivel && (
         <div className={`fixed bottom-6 right-6 z-[100] px-6 py-4 rounded-2xl shadow-2xl font-bold flex items-center gap-3 animate-in slide-in-from-bottom-6 fade-in duration-300 border ${
@@ -93,7 +94,7 @@ export default function ListarVendas() {
         inputQtd={inputQtd} setInputQtd={setInputQtd} 
       />
 
-      <HeaderInterno titulo="Histórico de Vendas" subtitulo="OxentePass • Painel de Controle" iconeString="O" />
+      <HeaderInterno titulo="Histórico de Vendas" subtitulo="OxentePass • Painel de Controle" icone={<ClipboardList size={24} className="text-teal-600" />} />
       
       <div className="p-0">
         <TabelaCompleta vendas={vendas} abrirModal={abrirModal} />

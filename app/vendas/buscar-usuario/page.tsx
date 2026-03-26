@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react';
+import { UserSearch } from "lucide-react";
 import { chamadaAPI } from "../../../backend/chamadaPadrao";
 import { LayoutGeral } from "../../_components/LayoutGeral";
 import { HeaderInterno } from "../../_components/HeaderInterno";
@@ -28,8 +29,8 @@ export default function BuscarVendaPorUsuario() {
   };
 
   return (
-    <LayoutGeral voltarLink="/vendas">
-      <HeaderInterno titulo="Histórico por Usuário" subtitulo="Histórico completo de transações do cliente" iconeString="O" />
+    <LayoutGeral voltarLink="/vendas" scroll>
+      <HeaderInterno titulo="Histórico por Usuário" subtitulo="Histórico completo de transações do cliente" icone={<UserSearch size={24} className="text-teal-600" />} />
       
       <div className="p-0">
         <FormBuscaPadrao 
