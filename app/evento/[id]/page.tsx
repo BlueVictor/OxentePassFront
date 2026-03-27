@@ -220,7 +220,7 @@ export default async function Evento(props: any) {
                       </p>
                       
                       <div className="flex flex-col gap-2">
-                        <Link href={`/vendas/criar?ingressoId=${item.id}`}>
+                        <Link href={`/organizador/vendas/criar?ingressoId=${item.id}`}>
                           <button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3 rounded-xl text-[11px] uppercase tracking-widest shadow-md shadow-emerald-100 transition-all active:scale-[0.97]">
                             Comprar Agora
                           </button>
