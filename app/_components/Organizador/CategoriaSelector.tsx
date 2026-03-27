@@ -89,7 +89,6 @@ export default function CategoriaSelector({ tagsExistentes = [], selecionadas, s
             placeholder="Ex: Show de Rock"
             className="flex-1 border-2 border-slate-200 bg-white rounded-xl p-3 text-sm font-semibold text-slate-700 outline-none focus:border-emerald-500 transition-colors placeholder:font-normal" 
           />
-          {/* COR CORRIGIDA NO BOTÃO ABAIXO */}
           <button 
             type="button" 
             onClick={adicionarNova}
