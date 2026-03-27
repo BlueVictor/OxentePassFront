@@ -43,6 +43,8 @@ npm run build
 # Inicie o servidor
 npm run start
 
+```
+
 ## 👥 Integrantes do Projeto
 - [Arthur de Sá](https://github.com/ruhtra5000)
 - [Guilherme Paes](https://github.com/Guy1717)
