@@ -114,8 +114,7 @@ export default function ImagemSelector({ imagens, setImagens }: any) {
             </label>
           </div>
         </div>
-
-        {/* BOTÃO DE CONFIRMAR O ENVIO (O que estava sumido!) */}
+        
         <button 
           type="button" 
           onClick={adicionar}
