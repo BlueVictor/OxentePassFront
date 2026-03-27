@@ -22,7 +22,7 @@ export default function CriarCidade() {
     e.preventDefault();
     setIsSubmitting(true);
 
-	// Criação da cidade
+    // Criação da cidade
     const data = {
       nome: formData.nome,
       descricao: formData.descricao
@@ -34,7 +34,7 @@ export default function CriarCidade() {
     });
 
     if (!cidade.ok) {
-      showToast(String(cidade.data.mensagem), "error");
+      showToast(String(cidade.data?.mensagem || "Ocorreu um erro ao criar a cidade"), "error");
       setIsSubmitting(false);
       return;
     }

@@ -7,9 +7,12 @@ import Image from "next/image";
 import "../../globals.css";
 import { ListSearchBar } from "@/app/_components/Organizador/ListSearchBar";
 
-const CIDADE_FILTER_OPTIONS = [
+const PONTO_VENDA_FILTER_OPTIONS = [
   { label: "Nome", value: "nome" },
-  { label: "Categoria", value: "tag" },
+  { label: "Detalhes", value: "detalhes" },
+  { label: "CEP", value: "cep" },
+  { label: "Bairro", value: "bairro" },
+  { label: "Rua", value: "rua" },
 ];
 
 const EMPTY_PAGE = {
@@ -24,12 +27,12 @@ type SearchParams = Promise<{
 }>;
 
 function normalizarCampo(campo?: string) {
-  return CIDADE_FILTER_OPTIONS.some((option) => option.value === campo)
+  return PONTO_VENDA_FILTER_OPTIONS.some((option) => option.value === campo)
     ? campo
-    : CIDADE_FILTER_OPTIONS[0].value;
+    : PONTO_VENDA_FILTER_OPTIONS[0].value;
 }
 
-async function getCidades(pagina: number, campo?: string, termoBusca?: string) {
+async function getPontosVenda(pagina: number, campo?: string, termoBusca?: string) {
   const params = new URLSearchParams({
     page: pagina.toString(),
     size: "10",
@@ -39,21 +42,21 @@ async function getCidades(pagina: number, campo?: string, termoBusca?: string) {
     params.set(campo, termoBusca);
   }
 
-  const response = await chamadaAPI(`/cidade/filtro?${params.toString()}`, "GET");
+  const response = await chamadaAPI(`/pontovenda/filtro?${params.toString()}`, "GET");
 
   if (!response) {
-    console.error("Falha no carregamento das cidades");
+    console.error("Falha no carregamento dos pontos de venda");
     return EMPTY_PAGE;
   }
 
   return response;
 }
 
-async function deletarCidade(id: string) {
-  const response = await chamadaAPI(`/cidade/${id}`, "DELETE");
+async function deletarPontoVenda(id: string) {
+  const response = await chamadaAPI(`/pontovenda/${id}`, "DELETE");
 
   if (!response) {
-    console.error("Falha na exclusão de cidade")
+    console.error("Falha na exclusão do ponto de venda");
     return null;
   }
 
@@ -66,30 +69,30 @@ async function deletar(formData: FormData) {
   const id = formData.get("id");
 
   if (typeof id !== "string" || !id) {
-    console.error("Id da cidade não informado para exclusão");
+    console.error("Id do ponto de venda não informado para exclusão");
     return;
   }
 
-  await deletarCidade(id);
+  await deletarPontoVenda(id);
 
-  revalidatePath("/organizador/cidade");
+  revalidatePath("/organizador/ponto-venda");
 }
 
-export default async function OrgListCidade(props: { searchParams?: SearchParams }) {
+export default async function OrgListPontoVenda(props: { searchParams?: SearchParams }) {
   const searchParams = await props.searchParams;
   const pagina = Number(searchParams?.pag ?? 0);
   const termoBusca = searchParams?.q?.trim() ?? "";
-  const campo = termoBusca ? normalizarCampo(searchParams?.campo) : CIDADE_FILTER_OPTIONS[0].value;
-  const cidades = await getCidades(pagina, campo, termoBusca);
+  const campo = termoBusca ? normalizarCampo(searchParams?.campo) : PONTO_VENDA_FILTER_OPTIONS[0].value;
+  const pontosVenda = await getPontosVenda(pagina, campo, termoBusca);
 
   return (
     <div className="flex flex-row justify-center">
       <main className="w-4/5">
         <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          <h1 className="text-4xl">Cidades</h1>
-          <Link href={"/organizador/cidade/criar"}>
+          <h1 className="text-4xl">Pontos de Venda</h1>
+          <Link href={"/organizador/ponto-venda/criar"}>
             <button className="flex cursor-pointer flex-row gap-2 rounded-2xl bg-blue-500 p-3 text-xl text-white">
-              Criar Cidade
+              Criar Ponto de Venda
               <Image
                 src={"/criar.png"}
                 alt="icone mais"
@@ -102,23 +105,27 @@ export default async function OrgListCidade(props: { searchParams?: SearchParams
 
         <ListSearchBar
           key={`${campo}:${termoBusca}`}
-          placeholder="Busque por nome da cidade ou categoria"
+          placeholder="Busque por nome, detalhes, CEP, bairro ou rua"
           initialQuery={termoBusca}
           initialField={campo}
-          filterOptions={CIDADE_FILTER_OPTIONS}
+          filterOptions={PONTO_VENDA_FILTER_OPTIONS}
         />
 
         <OrgLista
-          data={cidades.content}
+          data={pontosVenda.content}
           columns={[
             { header: "Nome", accessor: "nome" },
-            { header: "Descrição", accessor: "descricao" },
+            { header: "Detalhes", accessor: "detalhes" },
+            { header: "CEP", accessor: "endereco.cep" },
+            { header: "Bairro", accessor: "endereco.bairro" },
+            { header: "Rua", accessor: "endereco.rua" },
+            { header: "Numero", accessor: "endereco.numero" },
           ]}
-          editBasePath={"/organizador/cidade"}
+          editBasePath={"/organizador/ponto-venda"}
           deleteAction={deletar}
         />
 
-        <Paginacao page={pagina} totalPages={cidades.totalPages} />
+        <Paginacao page={pagina} totalPages={pontosVenda.totalPages} />
       </main>
     </div>
   );

@@ -8,6 +8,7 @@ import { editarMeuPerfilOrganizador, buscarMeuPerfilOrganizador } from "../../..
 import { buscarMeuPerfil, editarUsuario } from "../../../backend/chamadasUsuario";
 import { useAuth } from "../../_components/Auth/AuthProvider";
 import { useToast } from "../../_components/ToastProvider";
+import {Edit, User, X } from "lucide-react";
 
 type MeuPerfil = {
     nome: string;
@@ -208,7 +209,8 @@ export default function MeuPerfilPage() {
             <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
                 <div className="flex items-start justify-between gap-4 border-b border-slate-100 pb-4">
                     <div>
-                        <h2 className="text-xl font-semibold text-slate-900">
+                        <h2 className="text-xl font-semibold text-slate-900 flex gap-2">
+                            {<User size={30} />}
                             Dados da conta
                         </h2>
                         <p className="mt-1 text-sm text-slate-500">
@@ -219,8 +221,9 @@ export default function MeuPerfilPage() {
                     <button
                         type="button"
                         onClick={() => editandoConta ? cancelarEdicaoConta() : setEditandoConta(true)}
-                        className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50"
+                        className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50 flex gap-2 items-center"
                     >
+                        {editandoConta ? <X size={12}/> : <Edit size={20} />}
                         {editandoConta ? "Cancelar" : "Editar"}
                     </button>
                 </div>
@@ -310,7 +313,8 @@ export default function MeuPerfilPage() {
                 <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
                     <div className="flex items-start justify-between gap-4 border-b border-slate-100 pb-4">
                         <div>
-                            <h2 className="text-xl font-semibold text-slate-900">
+                            <h2 className="text-xl font-semibold text-slate-900 flex gap-2">
+                                {<User size={30}/>}
                                 Dados de organizador
                             </h2>
                             <p className="mt-1 text-sm text-slate-500">
@@ -321,8 +325,9 @@ export default function MeuPerfilPage() {
                         <button
                             type="button"
                             onClick={() => editandoOrganizador ? cancelarEdicaoOrganizador() : setEditandoOrganizador(true)}
-                            className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50"
+                            className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50 flex gap-2 items-center"
                         >
+                            {editandoOrganizador ? <X size={12} /> : <Edit size={20} />}
                             {editandoOrganizador ? "Cancelar" : "Editar"}
                         </button>
                     </div>

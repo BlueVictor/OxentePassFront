@@ -2,11 +2,13 @@ import { chamadaAPI } from "../../../backend/chamadaPadrao";
 import { getS3URL, converterDataHora } from "../../../funcoes/helpers";
 import Image from "next/image";
 import Link from "next/link";
-import "../../globals.css";
-import "./page.css"
 import PontoVendaCard from "@/app/_components/PontoVenda/PontoVendaCard";
 import SecaoAvaliacoes from "@/app/_components/Avaliacao/SecaoAvaliacoes";
 import { BotaoCarrinho } from "@/app/_components/BotaoCarrinho"; 
+import "../../globals.css";
+import "./page.css"
+import { SubEventoCard } from "@/app/_components/SubEventoCard";
+import { Paginacao } from "@/app/_components/Paginacao";
 
 async function getEvento(idEvento: string) {
   const response = await chamadaAPI(
@@ -32,12 +34,28 @@ async function getImagens(idEvento: string) {
   return response.content
 }
 
+async function getSubEventos (idEvento: number, paginaSubEventos: number) {
+  const response = await chamadaAPI(
+    `/evento/${idEvento}/subeventos/comImg?page=${paginaSubEventos}&size=2`,
+    "GET"
+  )
+
+  if (!response) {
+    console.error("Falha no carregamento de sub-eventos")
+    return []
+  }
+
+  return response
+}
+
 export default async function Evento(props: any) {
   const { id } = await props.params
   const searchParams = await props.searchParams;
   const paginaAvaliacao = Number(searchParams?.pagAvaliacao ?? 0);
+  const paginaSubEventos = Number(searchParams?.pagSubEventos ?? 0);
   const evento = (await getEvento(id))[0]
   const imagens = await getImagens(id)
+  const subeventos = evento.ehSimples ? null : await getSubEventos(id, paginaSubEventos)
 
   return (
     <div className="flex justify-center">
@@ -98,27 +116,66 @@ export default async function Evento(props: any) {
                 </div>
               </div>
 
-              {/* Categorias */}
-              <div>
-                <h2 className="text-3xl mt-10">Categorias</h2>
-                <div className="flex flex-row gap-2 mt-4">
-                  {evento.tags.map((item: any) => (
-                    <Link key={item.id} href={`/categoria/${item.tag}`} className="cursor-pointer">
-                      <div className="tag-card">
-                        <h3 className="text-lg">{item.tag}</h3>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </div>
+              {/* Tags/Categorias */}
+              {evento.tags.length > 0 && 
+                <>
+                  <h2 className="text-3xl mt-10">Categorias</h2>
+                  <p className="mt-2 mb-4">Categorias em que esse evento se enquadra!</p>
+                  <div className="flex flex-row gap-2">
+                    {evento.tags.map((item: any) => (
+                      <Link
+                        key={item.id}
+                        href={`/categoria/${item.tag}`}
+                        className="cursor-pointer"
+                      >
+                        <div className="tag-card">
+                          <h3 className="text-lg">{item.tag}</h3>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </>
+              }
 
               {/* Pontos de venda */}
-              <h2 className="text-3xl mt-10">Pontos de Venda</h2>
-              <div className="flex flex-row flex-wrap gap-3 mt-4">
-                {evento.pontosVenda.map((item: any) => (
-                  <PontoVendaCard key={item.id} {...item} />
-                ))}
-              </div>
+              {evento.pontosVenda.length > 0 &&
+                <>
+                  <h2 className="text-3xl mt-10">Pontos de Venda</h2>
+                  <p className="mt-2 mb-4">Não curte comprar online? Seguem alguns pontos de venda presenciais para você!</p>
+                  <div className="flex flex-row flex-wrap gap-3">
+                    {evento.pontosVenda.map((item: any) => (
+                      <PontoVendaCard
+                        key={item.id}
+                        id={item.id}
+                        nome={item.nome}
+                        detalhes={item.detalhes}
+                        endereco={item.endereco}
+                      />
+                    ))}
+                  </div>
+                </>
+              }
+              
+              {/* Sub-Eventos */}
+              {subeventos != null && subeventos.size > 0 &&
+                <div>
+                  <h2 className="text-3xl mt-10 mb-2">Sub-Eventos</h2>
+                  <div className="flex flex-row flex-wrap gap-3">
+                    {subeventos.content.map((item: any) => (
+                      <SubEventoCard
+                        key={item.id}
+                        item={item}
+                      />
+                    ))}
+                  </div>
+
+                  <Paginacao
+                    page={paginaSubEventos}
+                    totalPages={subeventos.totalPages}
+                    index="pagSubEventos"
+                  />
+                </div>
+              }
 
               {/* Organização */}
               <h2 className="text-3xl mt-10 mb-3">Organização</h2>
@@ -169,6 +226,7 @@ export default async function Evento(props: any) {
                           </button>
                         </Link>
 
+                        {/* Botão Carrinho preservado do HEAD */}
                         <BotaoCarrinho ingresso={item} />
                       </div>
                     </div>

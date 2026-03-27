@@ -33,7 +33,7 @@ export default function CadastroPage() {
       const response = await chamadaAPI("/usuario", "POST", formData);
 
       if (!response) {
-        showToast("Não foi possível realizar o cadastro.", "error");
+        showToast("Não foi possível realizar o cadastro com os dados informados.", "error");
         setCarregando(false);
         return;
       }
@@ -45,7 +45,7 @@ export default function CadastroPage() {
       showToast("Ocorreu um erro interno. Tente novamente.", "error");
       setCarregando(false);
     }
-  }
+  };
 
   return (
     <div className="fixed inset-0 pt-[80px] bg-slate-50 flex items-center justify-center overflow-hidden z-0">
