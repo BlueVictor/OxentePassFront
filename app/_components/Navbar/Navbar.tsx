@@ -65,7 +65,6 @@ export default function Navbar() {
                         </Link>
                     </li>
 
-                    {/* Mapeamento dos Links restaurado */}
                     {links.map((link: LinkProps) => (
                         <li key={link.id}>
                             <Link 
@@ -90,7 +89,6 @@ export default function Navbar() {
                         )}
                     </Link>
 
-                    {/* Fechamento correto das tags restaurado */}
                     {loading ? (
                         <span className="text-sm text-white/80 font-medium animate-pulse">
                             Carregando...
